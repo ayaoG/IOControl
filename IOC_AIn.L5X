@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="33.00" TargetName="IOC_AIn" TargetType="AddOnInstructionDefinition" ContainsContext="true" ExportDate="2026-07-17T21:43:29.000Z" ExportOptions="References DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="IOC_AIn_Context">
+<DataTypes Use="Context">
+</DataTypes>
+<AddOnInstructionDefinitions Use="Context">
+<AddOnInstructionDefinition Use="Target" Name="IOC_AIn" Revision="1.0" Class="Standard" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2026-07-17T21:43:29.000Z" CreatedBy="Claude" EditedDate="2026-07-17T21:43:29.000Z" EditedBy="Claude" SoftwareRevision="v33.00">
+<Description>
+<![CDATA[Simplified Analog Input AOI - based on PlantPAx P_AIn 4.10.03.]]>
+</Description>
+<Parameters>
+    <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+      <Description>
+        <![CDATA[Enable Input - System Defined Parameter]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+      <Description>
+        <![CDATA[Enable Output - System Defined Parameter]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="PCmd_Reset" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Program command Reset alarms (momentary)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="OCmd_Reset" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Operator command Reset alarms (momentary)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_PV" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Raw analog input signal (before scaling)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_PVBad" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = PV quality bad (from I/O module) - forces Sts_Fail when FailGate active]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_PVUncertain" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = PV quality uncertain (mirrored to Sts_PVUncertain)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_HiHiGate" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = enable HiHi alarm checking]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_HiGate" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = enable Hi alarm checking]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_LoGate" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = enable Lo alarm checking]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_LoLoGate" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = enable LoLo alarm checking]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_FailGate" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = enable Fail alarm checking (out-of-range and PVBad)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_InpRawMin" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Raw input value at Cfg_PVEUMin (e.g. 4.0 for 4-20mA)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_InpRawMax" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Raw input value at Cfg_PVEUMax (e.g. 20.0 for 4-20mA)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_PVEUMin" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Engineering-unit value when raw = Cfg_InpRawMin]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_PVEUMax" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Engineering-unit value when raw = Cfg_InpRawMax]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_FiltTC" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[First-order filter time constant (sec, 0 = no filter)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HiHiGateDly" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Time Inp_HiHiGate must be TRUE before HiHi alarm checking begins (sec)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HiGateDly" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Time Inp_HiGate must be TRUE before Hi alarm checking begins (sec)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_LoGateDly" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Time Inp_LoGate must be TRUE before Lo alarm checking begins (sec)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_LoLoGateDly" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Time Inp_LoLoGate must be TRUE before LoLo alarm checking begins (sec)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_FailGateDly" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Time Inp_FailGate must be TRUE before Fail alarm checking begins (sec)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HiHiLim" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[HiHi alarm threshold (EU) - Sts_HiHi TRUE when Val > this]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HiLim" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Hi alarm threshold (EU)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_LoLim" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Lo alarm threshold (EU)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_LoLoLim" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[LoLo alarm threshold (EU)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HiHiDB" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[HiHi deadband (EU) - alarm clears when Val falls below (HiHiLim - HiHiDB)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HiDB" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Hi deadband (EU)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_LoDB" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Lo deadband (EU) - alarm clears when Val rises above (LoLim + LoDB)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_LoLoDB" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[LoLo deadband (EU)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_FailHiLim" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Fail-high threshold (EU) - signal considered out-of-range above this]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_FailLoLim" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Fail-low threshold (EU) - signal considered out-of-range below this]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_FailDB" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Fail deadband (EU) - hysteresis for FailHi/FailLo]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasHiHiAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = Enable HiHi alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasHiAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = Enable Hi alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasLoAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = Enable Lo alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasLoLoAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = Enable LoLo alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasFailAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = Enable Fail alarm latching (out-of-range or Inp_PVBad)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Val" TagType="Base" DataType="REAL" Usage="Output" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Scaled, filtered PV in engineering units]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Val_InpPV" TagType="Base" DataType="REAL" Usage="Output" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Raw Inp_PV live mirror]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_PVBad" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live Inp_PVBad mirror]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_PVUncertain" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live Inp_PVUncertain mirror]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_HiHi" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live: Val above Cfg_HiHiLim (with deadband)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Hi" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live: Val above Cfg_HiLim (with deadband)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Lo" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live: Val below Cfg_LoLim (with deadband)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_LoLo" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live: Val below Cfg_LoLoLim (with deadband)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Fail" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live: signal fail (out-of-range or Inp_PVBad)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_HiHi" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched HiHi alarm (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_Hi" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched Hi alarm (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_Lo" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched Lo alarm (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_LoLo" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched LoLo alarm (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_Fail" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched Fail alarm (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Val_Fault" TagType="Base" DataType="DINT" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Fault code: 0=None, 20=Lo, 21=Hi, 24=LoLo, 25=HiHi, 32=Fail]]>
+      </Description>
+    </Parameter>
+</Parameters>
+<LocalTags>
+    <LocalTag Name="Wrk_PrevPCmdReset" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Edge detect prev PCmd_Reset]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_PrevOCmdReset" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Edge detect prev OCmd_Reset]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_ResetAlm" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Reset pulse (one scan)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_UnfiltPV" DataType="REAL" Radix="Float" ExternalAccess="None">
+      <Description>
+        <![CDATA[Scaled PV in EU before filtering]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_Alpha" DataType="REAL" Radix="Float" ExternalAccess="None">
+      <Description>
+        <![CDATA[First-order filter coefficient (recomputed each scan)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_FailHi" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Latched FailHi condition (with deadband)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_FailLo" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Latched FailLo condition (with deadband)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_HiHiGateT" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[HiHi gate delay timer]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_HiGateT" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[Hi gate delay timer]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_LoGateT" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[Lo gate delay timer]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_LoLoGateT" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[LoLo gate delay timer]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_FailGateT" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[Fail gate delay timer]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_HiHiGateActive" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[1 = HiHi alarm checking enabled (gate TRUE and delay elapsed)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_HiGateActive" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[1 = Hi alarm checking enabled]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_LoGateActive" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[1 = Lo alarm checking enabled]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_LoLoGateActive" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[1 = LoLo alarm checking enabled]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_FailGateActive" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[1 = Fail alarm checking enabled]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_ScanT" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[Free-running timer for scan-time measurement]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_PrevScanACC" DataType="DINT" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Previous-scan Wrk_ScanT.ACC value]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_ScanTime" DataType="REAL" Radix="Float" ExternalAccess="None">
+      <Description>
+        <![CDATA[Actual scan time in seconds (drives filter alpha)]]>
+      </Description>
+    </LocalTag>
+</LocalTags>
+<Routines>
+<Routine Name="Logic" Type="ST">
+<STContent>
+      <Line Number="0"><![CDATA[(*]]></Line>
+      <Line Number="1"><![CDATA[=============================================================================]]></Line>
+      <Line Number="2"><![CDATA[IOC_AIn - Simplified Analog Input AOI - Studio 5000]]></Line>
+      <Line Number="3"><![CDATA[=============================================================================]]></Line>
+      <Line Number="4"><![CDATA[Scales, filters, and alarm-monitors an analog input signal.]]></Line>
+      <Line Number="5"><![CDATA[]]></Line>
+      <Line Number="6"><![CDATA[Based on PlantPAx P_AIn 4.10.03 with reduced scope:]]></Line>
+      <Line Number="7"><![CDATA[  - No sim mode, no quality codes (SrcQ), no HMI convenience flags]]></Line>
+      <Line Number="8"><![CDATA[  - No P_Alarm / P_Gate sub-AOI instances - alarms inlined with latched]]></Line>
+      <Line Number="9"><![CDATA[    Alm_* and Cfg_Has*Alm gates (matches our other IOC_* AOIs)]]></Line>
+      <Line Number="10"><![CDATA[  - No rate-of-change alarm]]></Line>
+      <Line Number="11"><![CDATA[  - No PV min/max capture over time]]></Line>
+      <Line Number="12"><![CDATA[  - No mode select (sensors don't have owner)]]></Line>
+      <Line Number="13"><![CDATA[  - Both PCmd_Reset and OCmd_Reset with edge detection]]></Line>
+      <Line Number="14"><![CDATA[]]></Line>
+      <Line Number="15"><![CDATA[Signal path:]]></Line>
+      <Line Number="16"><![CDATA[  Wrk_UnfiltPV = scale(Inp_PV, Cfg_InpRawMin/Max, Cfg_PVEUMin/Max)]]></Line>
+      <Line Number="17"><![CDATA[  Val          = first-order filter(Wrk_UnfiltPV, Cfg_FiltTC, Wrk_ScanTime)]]></Line>
+      <Line Number="18"><![CDATA[]]></Line>
+      <Line Number="19"><![CDATA[Alarm bands (each independent, with deadband hysteresis):]]></Line>
+      <Line Number="20"><![CDATA[  HiHi: Val > Cfg_HiHiLim, clears when Val < (Cfg_HiHiLim - Cfg_HiHiDB)]]></Line>
+      <Line Number="21"><![CDATA[  Hi  : same pattern with Cfg_HiLim   / Cfg_HiDB]]></Line>
+      <Line Number="22"><![CDATA[  Lo  : Val < Cfg_LoLim, clears when Val > (Cfg_LoLim + Cfg_LoDB)]]></Line>
+      <Line Number="23"><![CDATA[  LoLo: same pattern with Cfg_LoLoLim / Cfg_LoLoDB]]></Line>
+      <Line Number="24"><![CDATA[  Fail: Val > Cfg_FailHiLim OR Val < Cfg_FailLoLim OR Inp_PVBad]]></Line>
+      <Line Number="25"><![CDATA[=============================================================================]]></Line>
+      <Line Number="26"><![CDATA[*)]]></Line>
+      <Line Number="27"><![CDATA[]]></Line>
+      <Line Number="28"><![CDATA[]]></Line>
+      <Line Number="29"><![CDATA[(*]]></Line>
+      <Line Number="30"><![CDATA[========================================]]></Line>
+      <Line Number="31"><![CDATA[Reset command edge detection]]></Line>
+      <Line Number="32"><![CDATA[========================================]]></Line>
+      <Line Number="33"><![CDATA[*)]]></Line>
+      <Line Number="34"><![CDATA[Wrk_ResetAlm := (PCmd_Reset AND NOT Wrk_PrevPCmdReset)]]></Line>
+      <Line Number="35"><![CDATA[                OR (OCmd_Reset AND NOT Wrk_PrevOCmdReset);]]></Line>
+      <Line Number="36"><![CDATA[]]></Line>
+      <Line Number="37"><![CDATA[Wrk_PrevPCmdReset := PCmd_Reset;]]></Line>
+      <Line Number="38"><![CDATA[Wrk_PrevOCmdReset := OCmd_Reset;]]></Line>
+      <Line Number="39"><![CDATA[]]></Line>
+      <Line Number="40"><![CDATA[PCmd_Reset := 0;]]></Line>
+      <Line Number="41"><![CDATA[OCmd_Reset := 0;]]></Line>
+      <Line Number="42"><![CDATA[]]></Line>
+      <Line Number="43"><![CDATA[]]></Line>
+      <Line Number="44"><![CDATA[(*]]></Line>
+      <Line Number="45"><![CDATA[========================================]]></Line>
+      <Line Number="46"><![CDATA[Live status mirrors]]></Line>
+      <Line Number="47"><![CDATA[========================================]]></Line>
+      <Line Number="48"><![CDATA[*)]]></Line>
+      <Line Number="49"><![CDATA[Val_InpPV       := Inp_PV;]]></Line>
+      <Line Number="50"><![CDATA[Sts_PVBad       := Inp_PVBad;]]></Line>
+      <Line Number="51"><![CDATA[Sts_PVUncertain := Inp_PVUncertain;]]></Line>
+      <Line Number="52"><![CDATA[]]></Line>
+      <Line Number="53"><![CDATA[]]></Line>
+      <Line Number="54"><![CDATA[(*]]></Line>
+      <Line Number="55"><![CDATA[========================================]]></Line>
+      <Line Number="56"><![CDATA[Scan time measurement (used by first-order filter)]]></Line>
+      <Line Number="57"><![CDATA[Wrk_ScanT is a free-running FBD_TIMER; scan time is the delta of its ACC]]></Line>
+      <Line Number="58"><![CDATA[between consecutive scans. Handles the rare rollover with a small clamp.]]></Line>
+      <Line Number="59"><![CDATA[========================================]]></Line>
+      <Line Number="60"><![CDATA[*)]]></Line>
+      <Line Number="61"><![CDATA[Wrk_ScanT.PRE := 2147483647;]]></Line>
+      <Line Number="62"><![CDATA[Wrk_ScanT.TimerEnable := 1;]]></Line>
+      <Line Number="63"><![CDATA[Wrk_ScanT.Reset := 0;]]></Line>
+      <Line Number="64"><![CDATA[TONR(Wrk_ScanT);]]></Line>
+      <Line Number="65"><![CDATA[]]></Line>
+      <Line Number="66"><![CDATA[Wrk_ScanTime := (Wrk_ScanT.ACC - Wrk_PrevScanACC) * 0.001;]]></Line>
+      <Line Number="67"><![CDATA[IF Wrk_ScanTime < 0.0 THEN]]></Line>
+      <Line Number="68"><![CDATA[    Wrk_ScanTime := 0.001;]]></Line>
+      <Line Number="69"><![CDATA[END_IF;]]></Line>
+      <Line Number="70"><![CDATA[Wrk_PrevScanACC := Wrk_ScanT.ACC;]]></Line>
+      <Line Number="71"><![CDATA[]]></Line>
+      <Line Number="72"><![CDATA[]]></Line>
+      <Line Number="73"><![CDATA[(*]]></Line>
+      <Line Number="74"><![CDATA[========================================]]></Line>
+      <Line Number="75"><![CDATA[Scale raw input to engineering units]]></Line>
+      <Line Number="76"><![CDATA[Wrk_UnfiltPV = ((Inp_PV - RawMin) / (RawMax - RawMin)) * (EUMax - EUMin) + EUMin]]></Line>
+      <Line Number="77"><![CDATA[Guard against divide-by-zero if Cfg_InpRawMax = Cfg_InpRawMin.]]></Line>
+      <Line Number="78"><![CDATA[========================================]]></Line>
+      <Line Number="79"><![CDATA[*)]]></Line>
+      <Line Number="80"><![CDATA[IF Cfg_InpRawMax <> Cfg_InpRawMin THEN]]></Line>
+      <Line Number="81"><![CDATA[    Wrk_UnfiltPV := ((Inp_PV - Cfg_InpRawMin)]]></Line>
+      <Line Number="82"><![CDATA[                     / (Cfg_InpRawMax - Cfg_InpRawMin))]]></Line>
+      <Line Number="83"><![CDATA[                    * (Cfg_PVEUMax - Cfg_PVEUMin)]]></Line>
+      <Line Number="84"><![CDATA[                    + Cfg_PVEUMin;]]></Line>
+      <Line Number="85"><![CDATA[ELSE]]></Line>
+      <Line Number="86"><![CDATA[    Wrk_UnfiltPV := Cfg_PVEUMin;]]></Line>
+      <Line Number="87"><![CDATA[END_IF;]]></Line>
+      <Line Number="88"><![CDATA[]]></Line>
+      <Line Number="89"><![CDATA[]]></Line>
+      <Line Number="90"><![CDATA[(*]]></Line>
+      <Line Number="91"><![CDATA[========================================]]></Line>
+      <Line Number="92"><![CDATA[First-order lag filter]]></Line>
+      <Line Number="93"><![CDATA[  Alpha = ScanTime / (ScanTime + FiltTC)]]></Line>
+      <Line Number="94"><![CDATA[  Val   = Alpha * UnfiltPV + (1 - Alpha) * PreviousVal]]></Line>
+      <Line Number="95"><![CDATA[Cfg_FiltTC = 0 disables the filter (Val tracks Wrk_UnfiltPV instantly).]]></Line>
+      <Line Number="96"><![CDATA[========================================]]></Line>
+      <Line Number="97"><![CDATA[*)]]></Line>
+      <Line Number="98"><![CDATA[IF Cfg_FiltTC > 0.0 THEN]]></Line>
+      <Line Number="99"><![CDATA[    Wrk_Alpha := Wrk_ScanTime / (Wrk_ScanTime + Cfg_FiltTC);]]></Line>
+      <Line Number="100"><![CDATA[    Val := Wrk_Alpha * Wrk_UnfiltPV + (1.0 - Wrk_Alpha) * Val;]]></Line>
+      <Line Number="101"><![CDATA[ELSE]]></Line>
+      <Line Number="102"><![CDATA[    Val := Wrk_UnfiltPV;]]></Line>
+      <Line Number="103"><![CDATA[END_IF;]]></Line>
+      <Line Number="104"><![CDATA[]]></Line>
+      <Line Number="105"><![CDATA[]]></Line>
+      <Line Number="106"><![CDATA[(*]]></Line>
+      <Line Number="107"><![CDATA[========================================]]></Line>
+      <Line Number="108"><![CDATA[Per-alarm gate timers (matches PlantPAx P_AIn - one gate per alarm band)]]></Line>
+      <Line Number="109"><![CDATA[When Inp_xxxGate = 0, that alarm's live status is forced to 0.]]></Line>
+      <Line Number="110"><![CDATA[When Inp_xxxGate rises to 1, wait Cfg_xxxGateDly sec before checking.]]></Line>
+      <Line Number="111"><![CDATA[Sts_PVBad / Sts_PVUncertain are NOT gated - always mirror inputs.]]></Line>
+      <Line Number="112"><![CDATA[========================================]]></Line>
+      <Line Number="113"><![CDATA[*)]]></Line>
+      <Line Number="114"><![CDATA[Wrk_HiHiGateT.PRE := Cfg_HiHiGateDly * 1000.0;]]></Line>
+      <Line Number="115"><![CDATA[Wrk_HiHiGateT.TimerEnable := Inp_HiHiGate;]]></Line>
+      <Line Number="116"><![CDATA[Wrk_HiHiGateT.Reset := NOT Inp_HiHiGate;]]></Line>
+      <Line Number="117"><![CDATA[TONR(Wrk_HiHiGateT);]]></Line>
+      <Line Number="118"><![CDATA[]]></Line>
+      <Line Number="119"><![CDATA[Wrk_HiGateT.PRE := Cfg_HiGateDly * 1000.0;]]></Line>
+      <Line Number="120"><![CDATA[Wrk_HiGateT.TimerEnable := Inp_HiGate;]]></Line>
+      <Line Number="121"><![CDATA[Wrk_HiGateT.Reset := NOT Inp_HiGate;]]></Line>
+      <Line Number="122"><![CDATA[TONR(Wrk_HiGateT);]]></Line>
+      <Line Number="123"><![CDATA[]]></Line>
+      <Line Number="124"><![CDATA[Wrk_LoGateT.PRE := Cfg_LoGateDly * 1000.0;]]></Line>
+      <Line Number="125"><![CDATA[Wrk_LoGateT.TimerEnable := Inp_LoGate;]]></Line>
+      <Line Number="126"><![CDATA[Wrk_LoGateT.Reset := NOT Inp_LoGate;]]></Line>
+      <Line Number="127"><![CDATA[TONR(Wrk_LoGateT);]]></Line>
+      <Line Number="128"><![CDATA[]]></Line>
+      <Line Number="129"><![CDATA[Wrk_LoLoGateT.PRE := Cfg_LoLoGateDly * 1000.0;]]></Line>
+      <Line Number="130"><![CDATA[Wrk_LoLoGateT.TimerEnable := Inp_LoLoGate;]]></Line>
+      <Line Number="131"><![CDATA[Wrk_LoLoGateT.Reset := NOT Inp_LoLoGate;]]></Line>
+      <Line Number="132"><![CDATA[TONR(Wrk_LoLoGateT);]]></Line>
+      <Line Number="133"><![CDATA[]]></Line>
+      <Line Number="134"><![CDATA[Wrk_FailGateT.PRE := Cfg_FailGateDly * 1000.0;]]></Line>
+      <Line Number="135"><![CDATA[Wrk_FailGateT.TimerEnable := Inp_FailGate;]]></Line>
+      <Line Number="136"><![CDATA[Wrk_FailGateT.Reset := NOT Inp_FailGate;]]></Line>
+      <Line Number="137"><![CDATA[TONR(Wrk_FailGateT);]]></Line>
+      <Line Number="138"><![CDATA[]]></Line>
+      <Line Number="139"><![CDATA[Wrk_HiHiGateActive := Inp_HiHiGate AND (Wrk_HiHiGateT.DN OR Cfg_HiHiGateDly <= 0.0);]]></Line>
+      <Line Number="140"><![CDATA[Wrk_HiGateActive   := Inp_HiGate   AND (Wrk_HiGateT.DN   OR Cfg_HiGateDly   <= 0.0);]]></Line>
+      <Line Number="141"><![CDATA[Wrk_LoGateActive   := Inp_LoGate   AND (Wrk_LoGateT.DN   OR Cfg_LoGateDly   <= 0.0);]]></Line>
+      <Line Number="142"><![CDATA[Wrk_LoLoGateActive := Inp_LoLoGate AND (Wrk_LoLoGateT.DN OR Cfg_LoLoGateDly <= 0.0);]]></Line>
+      <Line Number="143"><![CDATA[Wrk_FailGateActive := Inp_FailGate AND (Wrk_FailGateT.DN OR Cfg_FailGateDly <= 0.0);]]></Line>
+      <Line Number="144"><![CDATA[]]></Line>
+      <Line Number="145"><![CDATA[]]></Line>
+      <Line Number="146"><![CDATA[(*]]></Line>
+      <Line Number="147"><![CDATA[========================================]]></Line>
+      <Line Number="148"><![CDATA[Alarm live statuses - each band gated by its own Inp_xxxGate]]></Line>
+      <Line Number="149"><![CDATA[========================================]]></Line>
+      <Line Number="150"><![CDATA[*)]]></Line>
+      <Line Number="151"><![CDATA[IF Wrk_HiHiGateActive THEN]]></Line>
+      <Line Number="152"><![CDATA[    IF Val > Cfg_HiHiLim THEN]]></Line>
+      <Line Number="153"><![CDATA[        Sts_HiHi := 1;]]></Line>
+      <Line Number="154"><![CDATA[    ELSIF Val < (Cfg_HiHiLim - Cfg_HiHiDB) THEN]]></Line>
+      <Line Number="155"><![CDATA[        Sts_HiHi := 0;]]></Line>
+      <Line Number="156"><![CDATA[    END_IF;]]></Line>
+      <Line Number="157"><![CDATA[ELSE]]></Line>
+      <Line Number="158"><![CDATA[    Sts_HiHi := 0;]]></Line>
+      <Line Number="159"><![CDATA[END_IF;]]></Line>
+      <Line Number="160"><![CDATA[]]></Line>
+      <Line Number="161"><![CDATA[IF Wrk_HiGateActive THEN]]></Line>
+      <Line Number="162"><![CDATA[    IF Val > Cfg_HiLim THEN]]></Line>
+      <Line Number="163"><![CDATA[        Sts_Hi := 1;]]></Line>
+      <Line Number="164"><![CDATA[    ELSIF Val < (Cfg_HiLim - Cfg_HiDB) THEN]]></Line>
+      <Line Number="165"><![CDATA[        Sts_Hi := 0;]]></Line>
+      <Line Number="166"><![CDATA[    END_IF;]]></Line>
+      <Line Number="167"><![CDATA[ELSE]]></Line>
+      <Line Number="168"><![CDATA[    Sts_Hi := 0;]]></Line>
+      <Line Number="169"><![CDATA[END_IF;]]></Line>
+      <Line Number="170"><![CDATA[]]></Line>
+      <Line Number="171"><![CDATA[IF Wrk_LoGateActive THEN]]></Line>
+      <Line Number="172"><![CDATA[    IF Val < Cfg_LoLim THEN]]></Line>
+      <Line Number="173"><![CDATA[        Sts_Lo := 1;]]></Line>
+      <Line Number="174"><![CDATA[    ELSIF Val > (Cfg_LoLim + Cfg_LoDB) THEN]]></Line>
+      <Line Number="175"><![CDATA[        Sts_Lo := 0;]]></Line>
+      <Line Number="176"><![CDATA[    END_IF;]]></Line>
+      <Line Number="177"><![CDATA[ELSE]]></Line>
+      <Line Number="178"><![CDATA[    Sts_Lo := 0;]]></Line>
+      <Line Number="179"><![CDATA[END_IF;]]></Line>
+      <Line Number="180"><![CDATA[]]></Line>
+      <Line Number="181"><![CDATA[IF Wrk_LoLoGateActive THEN]]></Line>
+      <Line Number="182"><![CDATA[    IF Val < Cfg_LoLoLim THEN]]></Line>
+      <Line Number="183"><![CDATA[        Sts_LoLo := 1;]]></Line>
+      <Line Number="184"><![CDATA[    ELSIF Val > (Cfg_LoLoLim + Cfg_LoLoDB) THEN]]></Line>
+      <Line Number="185"><![CDATA[        Sts_LoLo := 0;]]></Line>
+      <Line Number="186"><![CDATA[    END_IF;]]></Line>
+      <Line Number="187"><![CDATA[ELSE]]></Line>
+      <Line Number="188"><![CDATA[    Sts_LoLo := 0;]]></Line>
+      <Line Number="189"><![CDATA[END_IF;]]></Line>
+      <Line Number="190"><![CDATA[]]></Line>
+      <Line Number="191"><![CDATA[IF Wrk_FailGateActive THEN]]></Line>
+      <Line Number="192"><![CDATA[    IF Val > Cfg_FailHiLim THEN]]></Line>
+      <Line Number="193"><![CDATA[        Wrk_FailHi := 1;]]></Line>
+      <Line Number="194"><![CDATA[    ELSIF Val < (Cfg_FailHiLim - Cfg_FailDB) THEN]]></Line>
+      <Line Number="195"><![CDATA[        Wrk_FailHi := 0;]]></Line>
+      <Line Number="196"><![CDATA[    END_IF;]]></Line>
+      <Line Number="197"><![CDATA[]]></Line>
+      <Line Number="198"><![CDATA[    IF Val < Cfg_FailLoLim THEN]]></Line>
+      <Line Number="199"><![CDATA[        Wrk_FailLo := 1;]]></Line>
+      <Line Number="200"><![CDATA[    ELSIF Val > (Cfg_FailLoLim + Cfg_FailDB) THEN]]></Line>
+      <Line Number="201"><![CDATA[        Wrk_FailLo := 0;]]></Line>
+      <Line Number="202"><![CDATA[    END_IF;]]></Line>
+      <Line Number="203"><![CDATA[]]></Line>
+      <Line Number="204"><![CDATA[    Sts_Fail := Wrk_FailHi OR Wrk_FailLo OR Inp_PVBad;]]></Line>
+      <Line Number="205"><![CDATA[ELSE]]></Line>
+      <Line Number="206"><![CDATA[    Sts_Fail   := 0;]]></Line>
+      <Line Number="207"><![CDATA[    Wrk_FailHi := 0;]]></Line>
+      <Line Number="208"><![CDATA[    Wrk_FailLo := 0;]]></Line>
+      <Line Number="209"><![CDATA[END_IF;]]></Line>
+      <Line Number="210"><![CDATA[]]></Line>
+      <Line Number="211"><![CDATA[]]></Line>
+      <Line Number="212"><![CDATA[(*]]></Line>
+      <Line Number="213"><![CDATA[========================================]]></Line>
+      <Line Number="214"><![CDATA[Latched alarms - each latches only if its Cfg_Has*Alm is TRUE.]]></Line>
+      <Line Number="215"><![CDATA[All alarms clear on Wrk_ResetAlm.]]></Line>
+      <Line Number="216"><![CDATA[========================================]]></Line>
+      <Line Number="217"><![CDATA[*)]]></Line>
+      <Line Number="218"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="219"><![CDATA[    Alm_HiHi := 0;]]></Line>
+      <Line Number="220"><![CDATA[ELSIF Sts_HiHi AND Cfg_HasHiHiAlm THEN]]></Line>
+      <Line Number="221"><![CDATA[    Alm_HiHi := 1;]]></Line>
+      <Line Number="222"><![CDATA[END_IF;]]></Line>
+      <Line Number="223"><![CDATA[]]></Line>
+      <Line Number="224"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="225"><![CDATA[    Alm_Hi := 0;]]></Line>
+      <Line Number="226"><![CDATA[ELSIF Sts_Hi AND Cfg_HasHiAlm THEN]]></Line>
+      <Line Number="227"><![CDATA[    Alm_Hi := 1;]]></Line>
+      <Line Number="228"><![CDATA[END_IF;]]></Line>
+      <Line Number="229"><![CDATA[]]></Line>
+      <Line Number="230"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="231"><![CDATA[    Alm_Lo := 0;]]></Line>
+      <Line Number="232"><![CDATA[ELSIF Sts_Lo AND Cfg_HasLoAlm THEN]]></Line>
+      <Line Number="233"><![CDATA[    Alm_Lo := 1;]]></Line>
+      <Line Number="234"><![CDATA[END_IF;]]></Line>
+      <Line Number="235"><![CDATA[]]></Line>
+      <Line Number="236"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="237"><![CDATA[    Alm_LoLo := 0;]]></Line>
+      <Line Number="238"><![CDATA[ELSIF Sts_LoLo AND Cfg_HasLoLoAlm THEN]]></Line>
+      <Line Number="239"><![CDATA[    Alm_LoLo := 1;]]></Line>
+      <Line Number="240"><![CDATA[END_IF;]]></Line>
+      <Line Number="241"><![CDATA[]]></Line>
+      <Line Number="242"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="243"><![CDATA[    Alm_Fail := 0;]]></Line>
+      <Line Number="244"><![CDATA[ELSIF Sts_Fail AND Cfg_HasFailAlm THEN]]></Line>
+      <Line Number="245"><![CDATA[    Alm_Fail := 1;]]></Line>
+      <Line Number="246"><![CDATA[END_IF;]]></Line>
+      <Line Number="247"><![CDATA[]]></Line>
+      <Line Number="248"><![CDATA[]]></Line>
+      <Line Number="249"><![CDATA[(*]]></Line>
+      <Line Number="250"><![CDATA[========================================]]></Line>
+      <Line Number="251"><![CDATA[Val_Fault - highest-priority active fault code (matches PlantPAx P_AIn):]]></Line>
+      <Line Number="252"><![CDATA[  32 = Fail (out-of-range or Inp_PVBad)]]></Line>
+      <Line Number="253"><![CDATA[  25 = HiHi]]></Line>
+      <Line Number="254"><![CDATA[  24 = LoLo]]></Line>
+      <Line Number="255"><![CDATA[  21 = Hi]]></Line>
+      <Line Number="256"><![CDATA[  20 = Lo]]></Line>
+      <Line Number="257"><![CDATA[   0 = None]]></Line>
+      <Line Number="258"><![CDATA[========================================]]></Line>
+      <Line Number="259"><![CDATA[*)]]></Line>
+      <Line Number="260"><![CDATA[IF Sts_Fail OR Alm_Fail THEN]]></Line>
+      <Line Number="261"><![CDATA[    Val_Fault := 32;]]></Line>
+      <Line Number="262"><![CDATA[ELSIF Sts_HiHi OR Alm_HiHi THEN]]></Line>
+      <Line Number="263"><![CDATA[    Val_Fault := 25;]]></Line>
+      <Line Number="264"><![CDATA[ELSIF Sts_LoLo OR Alm_LoLo THEN]]></Line>
+      <Line Number="265"><![CDATA[    Val_Fault := 24;]]></Line>
+      <Line Number="266"><![CDATA[ELSIF Sts_Hi OR Alm_Hi THEN]]></Line>
+      <Line Number="267"><![CDATA[    Val_Fault := 21;]]></Line>
+      <Line Number="268"><![CDATA[ELSIF Sts_Lo OR Alm_Lo THEN]]></Line>
+      <Line Number="269"><![CDATA[    Val_Fault := 20;]]></Line>
+      <Line Number="270"><![CDATA[ELSE]]></Line>
+      <Line Number="271"><![CDATA[    Val_Fault := 0;]]></Line>
+      <Line Number="272"><![CDATA[END_IF;]]></Line>
+</STContent>
+</Routine>
+</Routines>
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+</Controller>
+</RSLogix5000Content>

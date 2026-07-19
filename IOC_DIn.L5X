@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="33.00" TargetName="IOC_DIn" TargetType="AddOnInstructionDefinition" ContainsContext="true" ExportDate="2026-07-16T02:06:15.000Z" ExportOptions="References DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="IOC_DIn_Context">
+<DataTypes Use="Context">
+</DataTypes>
+<AddOnInstructionDefinitions Use="Context">
+<AddOnInstructionDefinition Use="Target" Name="IOC_DIn" Revision="1.0" Class="Standard" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2026-07-16T02:06:15.000Z" CreatedBy="Claude" EditedDate="2026-07-16T02:06:15.000Z" EditedBy="Claude" SoftwareRevision="v33.00">
+<Description>
+<![CDATA[Simplified Discrete Input AOI - based on PlantPAx P_DIn 4.10.03.]]>
+</Description>
+<Parameters>
+    <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+      <Description>
+        <![CDATA[Enable Input - System Defined Parameter]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+      <Description>
+        <![CDATA[Enable Output - System Defined Parameter]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="PCmd_Reset" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Program command Reset alarms (momentary)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="OCmd_Reset" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Operator command Reset alarms (momentary)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_PV" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Raw discrete input signal (before polarity / debounce)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_Target" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Expected value of Sts_PV (drives Target Disagree logic)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_Gate" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = check Target Disagree; 0 = disagree logic disabled]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_IOFault" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[IO / communications fault input]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_Debounce" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Debounce time (sec) - Inp_PV must be stable this long for Sts_PV to update (0 = no debounce)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_GateDly" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Time Inp_Gate must be TRUE before Target Disagree checking begins (sec, 0 = check immediately)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_TgtDisagreeOnDly" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Minimum time for input to disagree with target to raise Sts_TgtDisagree (sec)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_TgtDisagreeOffDly" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Minimum time for input to agree with target to clear Sts_TgtDisagree (sec)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasTgtDisagreeAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = Enable Target Disagree alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasIOFaultAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1 = Enable IOFault alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_PV" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Debounced input value]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_InpPV" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Raw live Inp_PV mirror (before debounce)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_IOFault" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live Inp_IOFault mirror]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_PVBad" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[PV is unreliable (IO fault)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_TgtDisagree" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live: input disagrees with target after Cfg_TgtDisagreeOnDly (paused during IOFault)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_IOFault" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched IOFault (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_TgtDisagree" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched Target Disagree (needs reset)]]>
+      </Description>
+    </Parameter>
+</Parameters>
+<LocalTags>
+    <LocalTag Name="Wrk_PrevPCmdReset" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Edge detect prev PCmd_Reset]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_PrevOCmdReset" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Edge detect prev OCmd_Reset]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_ResetAlm" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Reset pulse (one scan)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_DebounceReq" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Debounce timer enable (Inp_PV XOR Sts_PV)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_TgtMismatch" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Target mismatch (Sts_PV XOR Inp_Target) AND Inp_Gate]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_DebounceTmr" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[Debounce timer]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_GateT" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[Gate delay timer (Inp_Gate must be TRUE for Cfg_GateDly)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_TgtOnTmr" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[Target Disagree ON-delay timer]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_TgtOffTmr" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[Target Disagree OFF-delay timer]]>
+      </Description>
+    </LocalTag>
+</LocalTags>
+<Routines>
+<Routine Name="Logic" Type="ST">
+<STContent>
+      <Line Number="0"><![CDATA[(*]]></Line>
+      <Line Number="1"><![CDATA[=============================================================================]]></Line>
+      <Line Number="2"><![CDATA[IOC_DIn - Simplified Discrete Input AOI]]></Line>
+      <Line Number="3"><![CDATA[Based on PlantPAx P_DIn with reduced scope.]]></Line>
+      <Line Number="4"><![CDATA[=============================================================================]]></Line>
+      <Line Number="5"><![CDATA[*)]]></Line>
+      <Line Number="6"><![CDATA[]]></Line>
+      <Line Number="7"><![CDATA[]]></Line>
+      <Line Number="8"><![CDATA[Wrk_ResetAlm := (PCmd_Reset AND NOT Wrk_PrevPCmdReset)]]></Line>
+      <Line Number="9"><![CDATA[                OR (OCmd_Reset AND NOT Wrk_PrevOCmdReset);]]></Line>
+      <Line Number="10"><![CDATA[]]></Line>
+      <Line Number="11"><![CDATA[Wrk_PrevPCmdReset := PCmd_Reset;]]></Line>
+      <Line Number="12"><![CDATA[Wrk_PrevOCmdReset := OCmd_Reset;]]></Line>
+      <Line Number="13"><![CDATA[]]></Line>
+      <Line Number="14"><![CDATA[PCmd_Reset := 0;]]></Line>
+      <Line Number="15"><![CDATA[OCmd_Reset := 0;]]></Line>
+      <Line Number="16"><![CDATA[]]></Line>
+      <Line Number="17"><![CDATA[]]></Line>
+      <Line Number="18"><![CDATA[Sts_InpPV   := Inp_PV;]]></Line>
+      <Line Number="19"><![CDATA[Sts_IOFault := Inp_IOFault;]]></Line>
+      <Line Number="20"><![CDATA[Sts_PVBad   := Inp_IOFault;]]></Line>
+      <Line Number="21"><![CDATA[]]></Line>
+      <Line Number="22"><![CDATA[]]></Line>
+      <Line Number="23"><![CDATA[Wrk_DebounceReq := Inp_PV XOR Sts_PV;]]></Line>
+      <Line Number="24"><![CDATA[Wrk_DebounceTmr.PRE := Cfg_Debounce * 1000.0;]]></Line>
+      <Line Number="25"><![CDATA[Wrk_DebounceTmr.TimerEnable := Wrk_DebounceReq;]]></Line>
+      <Line Number="26"><![CDATA[Wrk_DebounceTmr.Reset := NOT Wrk_DebounceReq;]]></Line>
+      <Line Number="27"><![CDATA[TONR(Wrk_DebounceTmr);]]></Line>
+      <Line Number="28"><![CDATA[]]></Line>
+      <Line Number="29"><![CDATA[IF Wrk_DebounceTmr.DN THEN]]></Line>
+      <Line Number="30"><![CDATA[    Sts_PV := Inp_PV;]]></Line>
+      <Line Number="31"><![CDATA[END_IF;]]></Line>
+      <Line Number="32"><![CDATA[]]></Line>
+      <Line Number="33"><![CDATA[IF Cfg_Debounce <= 0.0 THEN]]></Line>
+      <Line Number="34"><![CDATA[    Sts_PV := Inp_PV;]]></Line>
+      <Line Number="35"><![CDATA[END_IF;]]></Line>
+      <Line Number="36"><![CDATA[]]></Line>
+      <Line Number="37"><![CDATA[]]></Line>
+      <Line Number="38"><![CDATA[Wrk_GateT.PRE := Cfg_GateDly * 1000.0;]]></Line>
+      <Line Number="39"><![CDATA[Wrk_GateT.TimerEnable := Inp_Gate;]]></Line>
+      <Line Number="40"><![CDATA[Wrk_GateT.Reset := NOT Inp_Gate;]]></Line>
+      <Line Number="41"><![CDATA[TONR(Wrk_GateT);]]></Line>
+      <Line Number="42"><![CDATA[]]></Line>
+      <Line Number="43"><![CDATA[Wrk_TgtMismatch := (Sts_PV XOR Inp_Target) AND Inp_Gate]]></Line>
+      <Line Number="44"><![CDATA[                   AND (Wrk_GateT.DN OR Cfg_GateDly <= 0.0);]]></Line>
+      <Line Number="45"><![CDATA[]]></Line>
+      <Line Number="46"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="47"><![CDATA[    Sts_TgtDisagree := 0;]]></Line>
+      <Line Number="48"><![CDATA[END_IF;]]></Line>
+      <Line Number="49"><![CDATA[]]></Line>
+      <Line Number="50"><![CDATA[Wrk_TgtOnTmr.PRE := Cfg_TgtDisagreeOnDly * 1000.0;]]></Line>
+      <Line Number="51"><![CDATA[Wrk_TgtOnTmr.TimerEnable := Wrk_TgtMismatch AND NOT Sts_TgtDisagree AND NOT Sts_IOFault;]]></Line>
+      <Line Number="52"><![CDATA[Wrk_TgtOnTmr.Reset := NOT Wrk_TgtMismatch OR Sts_TgtDisagree OR Wrk_ResetAlm;]]></Line>
+      <Line Number="53"><![CDATA[TONR(Wrk_TgtOnTmr);]]></Line>
+      <Line Number="54"><![CDATA[]]></Line>
+      <Line Number="55"><![CDATA[Wrk_TgtOffTmr.PRE := Cfg_TgtDisagreeOffDly * 1000.0;]]></Line>
+      <Line Number="56"><![CDATA[Wrk_TgtOffTmr.TimerEnable := NOT Wrk_TgtMismatch AND Sts_TgtDisagree AND NOT Sts_IOFault;]]></Line>
+      <Line Number="57"><![CDATA[Wrk_TgtOffTmr.Reset := Wrk_TgtMismatch OR NOT Sts_TgtDisagree OR Wrk_ResetAlm;]]></Line>
+      <Line Number="58"><![CDATA[TONR(Wrk_TgtOffTmr);]]></Line>
+      <Line Number="59"><![CDATA[]]></Line>
+      <Line Number="60"><![CDATA[IF Wrk_TgtOnTmr.DN THEN]]></Line>
+      <Line Number="61"><![CDATA[    Sts_TgtDisagree := 1;]]></Line>
+      <Line Number="62"><![CDATA[ELSIF Wrk_TgtOffTmr.DN THEN]]></Line>
+      <Line Number="63"><![CDATA[    Sts_TgtDisagree := 0;]]></Line>
+      <Line Number="64"><![CDATA[END_IF;]]></Line>
+      <Line Number="65"><![CDATA[]]></Line>
+      <Line Number="66"><![CDATA[]]></Line>
+      <Line Number="67"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="68"><![CDATA[    Alm_IOFault := 0;]]></Line>
+      <Line Number="69"><![CDATA[ELSIF Sts_IOFault AND Cfg_HasIOFaultAlm THEN]]></Line>
+      <Line Number="70"><![CDATA[    Alm_IOFault := 1;]]></Line>
+      <Line Number="71"><![CDATA[END_IF;]]></Line>
+      <Line Number="72"><![CDATA[]]></Line>
+      <Line Number="73"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="74"><![CDATA[    Alm_TgtDisagree := 0;]]></Line>
+      <Line Number="75"><![CDATA[ELSIF Sts_TgtDisagree AND Cfg_HasTgtDisagreeAlm THEN]]></Line>
+      <Line Number="76"><![CDATA[    Alm_TgtDisagree := 1;]]></Line>
+      <Line Number="77"><![CDATA[END_IF;]]></Line>
+</STContent>
+</Routine>
+</Routines>
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+</Controller>
+</RSLogix5000Content>

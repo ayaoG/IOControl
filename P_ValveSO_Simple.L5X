@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="33.00" TargetName="P_ValveSO_Simple" TargetType="AddOnInstructionDefinition" ContainsContext="true" ExportDate="2026-07-14T00:47:59.000Z" ExportOptions="References DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="P_ValveSO_Context">
+<DataTypes Use="Context">
+</DataTypes>
+<AddOnInstructionDefinitions Use="Context">
+<AddOnInstructionDefinition Use="Target" Name="P_ValveSO_Simple" Revision="1.0" Class="Standard" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2026-07-14T00:47:59.000Z" CreatedBy="Claude" EditedDate="2026-07-14T00:47:59.000Z" EditedBy="Claude" SoftwareRevision="v33.00">
+<Description>
+<![CDATA[Simplified P_ValveSO AOI - based on PlantPAx P_ValveSO 4.10.03.]]>
+</Description>
+<Parameters>
+    <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+      <Description>
+        <![CDATA[Enable Input - System Defined Parameter]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+      <Description>
+        <![CDATA[Enable Output - System Defined Parameter]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cmd_Prog" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Momentary - command Program mode]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cmd_Oper" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Momentary - command Operator mode (wins over Cmd_Prog)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="PCmd_Open" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Program command Open (momentary, self-cleared)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="PCmd_Close" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Program command Close (momentary, self-cleared)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="PCmd_Reset" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Program command Reset (momentary, self-cleared)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="OCmd_Open" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Operator command Open (momentary, self-cleared)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="OCmd_Close" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Operator command Close (momentary, self-cleared)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="OCmd_Reset" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Operator command Reset (momentary, self-cleared)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_OpenLS" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Open limit switch (1=valve at Open position)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_ClosedLS" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Closed limit switch (1=valve at Closed position)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_IOFault" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[IO / communications fault input]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_IntlkOK" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Interlocks OK (safe to move)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_PermOK" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Permissive OK (allowed to move)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Inp_Hand" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Hand mode active (local override; AOI forces Out=0)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_ProgPwrUp" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=default to Program mode on power-up]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_FailOpen" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[0=fail-close (energize to open); 1=fail-open (energize to close)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasOpenLS" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Open LS signal wired (used for Sts_Opened and Sts_LSFail)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasClosedLS" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Closed LS signal wired (used for Sts_Closed and Sts_LSFail)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_UseOpenLS" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Use Open LS for stall failure checking (should only be 1 if Cfg_HasOpenLS)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_UseClosedLS" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Use Closed LS for stall failure checking (should only be 1 if Cfg_HasClosedLS)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_FullStallT" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Full Stall time (sec) - valve never moves off starting LS]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_TransitStallT" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Transit Stall time (sec) - valve fails to reach target LS]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasFullStallAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Enable Full Stall alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasTransitStallAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Enable Transit Stall alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasIOFaultAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Enable IO Fault alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasIntlkTripAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Enable Interlock Trip alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Cfg_HasLSFailAlm" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Enable LS Fail alarm latching]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Out" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Solenoid coil output (0=de-energize / fail-safe, 1=energize)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_NotRdy" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Master not-ready rollup (Wrk_NotRdy mirror)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Available" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Sts_Prog AND NOT Sts_NotRdy AND NOT Inp_Hand]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Ready" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[NOT Wrk_Trip - no latched alarms]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_RdyReset" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Reset would clear a latched alarm or Nrdy_Fail]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Prog" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Program mode active]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Oper" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[1=Operator mode active]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Opened" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Valve at Open position (LS confirmed, or commanded if no LS)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Closed" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Valve at Closed position (LS confirmed, or commanded if no LS)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Opening" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Commanded open, not yet at Open LS]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_Closing" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Commanded close, not yet at Closed LS]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_IOFault" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live Inp_IOFault mirror]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_IntlkTrip" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live NOT Inp_IntlkOK]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_LSFail" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Both OpenLS and ClosedLS active (impossible physical state)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_FullStall" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live: valve never left starting LS within Cfg_FullStallT]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Sts_TransitStall" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Live: valve did not reach target LS within Cfg_TransitStallT]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_IOFault" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched IOFault (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_IntlkTrip" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched IntlkTrip (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_LSFail" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched LSFail (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_FullStall" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched FullStall (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Alm_TransitStall" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched TransitStall (needs reset)]]>
+      </Description>
+    </Parameter>
+    <Parameter Name="Nrdy_Fail" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+      <Description>
+        <![CDATA[Latched feedback fail (any stall latched here regardless of Cfg_Has*Alm)]]>
+      </Description>
+    </Parameter>
+</Parameters>
+<LocalTags>
+    <LocalTag Name="Wrk_ModeAuto" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Active mode (1=Program, 0=Operator)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_PrevModeAuto" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Previous-scan mode for edge detection]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_ModeChange" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[TRUE for one scan on mode change]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_PrevPCmdOpen" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Edge detect prev PCmd_Open]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_PrevPCmdClose" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Edge detect prev PCmd_Close]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_PrevOCmdOpen" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Edge detect prev OCmd_Open]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_PrevOCmdClose" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Edge detect prev OCmd_Close]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_SrcCmdOpenEdge" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Source-selected Open edge]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_SrcCmdCloseEdge" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Source-selected Close edge]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_CmdOpen" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[1=Commanded Open, 0=Commanded Closed]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_ResetAlm" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Reset alarms / timers pulse (one scan)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_NotRdy" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Master not-ready rollup (live + latched conditions)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_Trip" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Any latched alarm active]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_FullStallReq" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Full stall condition active (drives Wrk_FullStallTmr)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_TransitStallReq" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+      <Description>
+        <![CDATA[Transit stall condition active (drives Wrk_TransitStallTmr)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_FullStallTmr" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[Full stall timer (valve never left starting LS)]]>
+      </Description>
+    </LocalTag>
+    <LocalTag Name="Wrk_TransitStallTmr" DataType="FBD_TIMER" ExternalAccess="None">
+      <Description>
+        <![CDATA[Transit stall timer (valve did not reach target LS)]]>
+      </Description>
+    </LocalTag>
+</LocalTags>
+<Routines>
+<Routine Name="Logic" Type="ST">
+<STContent>
+      <Line Number="0"><![CDATA[(*]]></Line>
+      <Line Number="1"><![CDATA[=============================================================================]]></Line>
+      <Line Number="2"><![CDATA[Simplified P_ValveSO AOI (Solenoid Operated Valve) - Studio 5000]]></Line>
+      <Line Number="3"><![CDATA[=============================================================================]]></Line>
+      <Line Number="4"><![CDATA[Matches PlantPAx P_ValveSO 4.10.03 conventions but with reduced scope:]]></Line>
+      <Line Number="5"><![CDATA[  - Prog/Oper modes only (no XCmd, Maint, OoS, Ovrd)]]></Line>
+      <Line Number="6"><![CDATA[  - Single Inp_PermOK, single Inp_IntlkOK (no bypass logic)]]></Line>
+      <Line Number="7"><![CDATA[  - No horn timer, no simulation mode]]></Line>
+      <Line Number="8"><![CDATA[  - Individual Cfg_Has*Alm gates for each alarm]]></Line>
+      <Line Number="9"><![CDATA[  - Master Wrk_NotRdy gate for command acceptance and output]]></Line>
+      <Line Number="10"><![CDATA[]]></Line>
+      <Line Number="11"><![CDATA[Command flow:]]></Line>
+      <Line Number="12"><![CDATA[  Cmd_Prog / Cmd_Oper edges select mode.]]></Line>
+      <Line Number="13"><![CDATA[  PCmd_Open / Close / Reset apply in Program mode.]]></Line>
+      <Line Number="14"><![CDATA[  OCmd_Open / Close / Reset apply in Operator mode.]]></Line>
+      <Line Number="15"><![CDATA[]]></Line>
+      <Line Number="16"><![CDATA[Physical output:]]></Line>
+      <Line Number="17"><![CDATA[  Out := Wrk_CmdOpen XOR Cfg_FailOpen]]></Line>
+      <Line Number="18"><![CDATA[  Cfg_FailOpen=FALSE (fail-close): energize to open, spring closes on fail]]></Line>
+      <Line Number="19"><![CDATA[  Cfg_FailOpen=TRUE  (fail-open):  energize to close, spring opens on fail]]></Line>
+      <Line Number="20"><![CDATA[]]></Line>
+      <Line Number="21"><![CDATA[Stall detection (matches PlantPAx dual-timer):]]></Line>
+      <Line Number="22"><![CDATA[  Sts_FullStall     - after Cfg_FullStallT with valve still at opposite LS]]></Line>
+      <Line Number="23"><![CDATA[                      (never moved off starting position)]]></Line>
+      <Line Number="24"><![CDATA[  Sts_TransitStall  - after Cfg_TransitStallT with valve not at target LS]]></Line>
+      <Line Number="25"><![CDATA[                      (moved but never reaches target)]]></Line>
+      <Line Number="26"><![CDATA[  Timers are interlocked - only one fires per event.]]></Line>
+      <Line Number="27"><![CDATA[]]></Line>
+      <Line Number="28"><![CDATA[Based on: PlantPAx P_ValveSO 4.10.03 + our simplified P_VSD design.]]></Line>
+      <Line Number="29"><![CDATA[=============================================================================]]></Line>
+      <Line Number="30"><![CDATA[*)]]></Line>
+      <Line Number="31"><![CDATA[]]></Line>
+      <Line Number="32"><![CDATA[]]></Line>
+      <Line Number="33"><![CDATA[(*]]></Line>
+      <Line Number="34"><![CDATA[========================================]]></Line>
+      <Line Number="35"><![CDATA[Mode select]]></Line>
+      <Line Number="36"><![CDATA[Cmd_Prog / Cmd_Oper momentary, mutually exclusive]]></Line>
+      <Line Number="37"><![CDATA[Operator wins if both active]]></Line>
+      <Line Number="38"><![CDATA[========================================]]></Line>
+      <Line Number="39"><![CDATA[*)]]></Line>
+      <Line Number="40"><![CDATA[IF Cmd_Oper THEN]]></Line>
+      <Line Number="41"><![CDATA[    Wrk_ModeAuto := 0;]]></Line>
+      <Line Number="42"><![CDATA[ELSIF Cmd_Prog THEN]]></Line>
+      <Line Number="43"><![CDATA[    Wrk_ModeAuto := 1;]]></Line>
+      <Line Number="44"><![CDATA[END_IF;]]></Line>
+      <Line Number="45"><![CDATA[]]></Line>
+      <Line Number="46"><![CDATA[Wrk_ModeChange := Wrk_ModeAuto XOR Wrk_PrevModeAuto;]]></Line>
+      <Line Number="47"><![CDATA[]]></Line>
+      <Line Number="48"><![CDATA[]]></Line>
+      <Line Number="49"><![CDATA[(*]]></Line>
+      <Line Number="50"><![CDATA[========================================]]></Line>
+      <Line Number="51"><![CDATA[Command edge detection + source selection]]></Line>
+      <Line Number="52"><![CDATA[PCmd_/OCmd_ are momentary - detect rising edges using Wrk_Prev*]]></Line>
+      <Line Number="53"><![CDATA[tracker tags. Only the active mode's edges propagate to the latch]]></Line>
+      <Line Number="54"><![CDATA[via Wrk_SrcCmd*Edge. Tracker tags are updated AFTER edge detection]]></Line>
+      <Line Number="55"><![CDATA[so this scan's edge uses last scan's value.]]></Line>
+      <Line Number="56"><![CDATA[========================================]]></Line>
+      <Line Number="57"><![CDATA[*)]]></Line>
+      <Line Number="58"><![CDATA[IF Wrk_ModeAuto THEN]]></Line>
+      <Line Number="59"><![CDATA[    Wrk_SrcCmdOpenEdge  := PCmd_Open  AND NOT Wrk_PrevPCmdOpen;]]></Line>
+      <Line Number="60"><![CDATA[    Wrk_SrcCmdCloseEdge := PCmd_Close AND NOT Wrk_PrevPCmdClose;]]></Line>
+      <Line Number="61"><![CDATA[ELSE]]></Line>
+      <Line Number="62"><![CDATA[    Wrk_SrcCmdOpenEdge  := OCmd_Open  AND NOT Wrk_PrevOCmdOpen;]]></Line>
+      <Line Number="63"><![CDATA[    Wrk_SrcCmdCloseEdge := OCmd_Close AND NOT Wrk_PrevOCmdClose;]]></Line>
+      <Line Number="64"><![CDATA[END_IF;]]></Line>
+      <Line Number="65"><![CDATA[]]></Line>
+      <Line Number="66"><![CDATA[Wrk_PrevPCmdOpen  := PCmd_Open;]]></Line>
+      <Line Number="67"><![CDATA[Wrk_PrevPCmdClose := PCmd_Close;]]></Line>
+      <Line Number="68"><![CDATA[Wrk_PrevOCmdOpen  := OCmd_Open;]]></Line>
+      <Line Number="69"><![CDATA[Wrk_PrevOCmdClose := OCmd_Close;]]></Line>
+      <Line Number="70"><![CDATA[]]></Line>
+      <Line Number="71"><![CDATA[]]></Line>
+      <Line Number="72"><![CDATA[(*]]></Line>
+      <Line Number="73"><![CDATA[========================================]]></Line>
+      <Line Number="74"><![CDATA[Master not-ready rollup]]></Line>
+      <Line Number="75"><![CDATA[Combines live input conditions + latched alarms.]]></Line>
+      <Line Number="76"><![CDATA[Computed early so it serves as the single gate for command acceptance]]></Line>
+      <Line Number="77"><![CDATA[and physical output (matches PlantPAx Sts_NotRdy usage pattern).]]></Line>
+      <Line Number="78"><![CDATA[Split into multiple statements to stay within Studio 5000 OR limit.]]></Line>
+      <Line Number="79"><![CDATA[========================================]]></Line>
+      <Line Number="80"><![CDATA[*)]]></Line>
+      <Line Number="81"><![CDATA[Wrk_NotRdy :=]]></Line>
+      <Line Number="82"><![CDATA[    Inp_IOFault               (* live IO/comms fault *)]]></Line>
+      <Line Number="83"><![CDATA[    OR (NOT Inp_IntlkOK)      (* live interlock not OK *)]]></Line>
+      <Line Number="84"><![CDATA[    OR Alm_IOFault            (* latched IOFault *)]]></Line>
+      <Line Number="85"><![CDATA[    OR Alm_IntlkTrip;         (* latched IntlkTrip *)]]></Line>
+      <Line Number="86"><![CDATA[]]></Line>
+      <Line Number="87"><![CDATA[Wrk_NotRdy :=]]></Line>
+      <Line Number="88"><![CDATA[    Wrk_NotRdy]]></Line>
+      <Line Number="89"><![CDATA[    OR Alm_LSFail             (* latched LS failure *)]]></Line>
+      <Line Number="90"><![CDATA[    OR Alm_FullStall          (* latched FullStall *)]]></Line>
+      <Line Number="91"><![CDATA[    OR Alm_TransitStall;      (* latched TransitStall *)]]></Line>
+      <Line Number="92"><![CDATA[]]></Line>
+      <Line Number="93"><![CDATA[Wrk_NotRdy :=]]></Line>
+      <Line Number="94"><![CDATA[    Wrk_NotRdy]]></Line>
+      <Line Number="95"><![CDATA[    OR Nrdy_Fail;             (* latched feedback fail *)]]></Line>
+      <Line Number="96"><![CDATA[]]></Line>
+      <Line Number="97"><![CDATA[]]></Line>
+      <Line Number="98"><![CDATA[(*]]></Line>
+      <Line Number="99"><![CDATA[========================================]]></Line>
+      <Line Number="100"><![CDATA[Internal command latch (Wrk_CmdOpen)]]></Line>
+      <Line Number="101"><![CDATA[Single bit represents direction intent - valve is bistable.]]></Line>
+      <Line Number="102"><![CDATA[NotRdy forces Wrk_CmdOpen to fail-safe direction (Cfg_FailOpen), which]]></Line>
+      <Line Number="103"><![CDATA[combined with the output XOR results in Out=0 (de-energize) - spring]]></Line>
+      <Line Number="104"><![CDATA[returns valve to its fail-safe position.]]></Line>
+      <Line Number="105"><![CDATA[Both Open and Close commands are gated by Inp_PermOK.]]></Line>
+      <Line Number="106"><![CDATA[========================================]]></Line>
+      <Line Number="107"><![CDATA[*)]]></Line>
+      <Line Number="108"><![CDATA[IF Wrk_NotRdy THEN]]></Line>
+      <Line Number="109"><![CDATA[    Wrk_CmdOpen := Cfg_FailOpen;]]></Line>
+      <Line Number="110"><![CDATA[ELSIF Wrk_SrcCmdCloseEdge AND Inp_PermOK THEN]]></Line>
+      <Line Number="111"><![CDATA[    Wrk_CmdOpen := 0;]]></Line>
+      <Line Number="112"><![CDATA[ELSIF Wrk_SrcCmdOpenEdge AND Inp_PermOK THEN]]></Line>
+      <Line Number="113"><![CDATA[    Wrk_CmdOpen := 1;]]></Line>
+      <Line Number="114"><![CDATA[END_IF;]]></Line>
+      <Line Number="115"><![CDATA[]]></Line>
+      <Line Number="116"><![CDATA[]]></Line>
+      <Line Number="117"><![CDATA[(*]]></Line>
+      <Line Number="118"><![CDATA[========================================]]></Line>
+      <Line Number="119"><![CDATA[Self-clear PCmd / OCmd]]></Line>
+      <Line Number="120"><![CDATA[PCmd_/OCmd_ must be declared as Input parameters with Read/Write access.]]></Line>
+      <Line Number="121"><![CDATA[Momentary commands are captured and cleared each scan.]]></Line>
+      <Line Number="122"><![CDATA[========================================]]></Line>
+      <Line Number="123"><![CDATA[*)]]></Line>
+      <Line Number="124"><![CDATA[PCmd_Open  := 0;]]></Line>
+      <Line Number="125"><![CDATA[PCmd_Close := 0;]]></Line>
+      <Line Number="126"><![CDATA[OCmd_Open  := 0;]]></Line>
+      <Line Number="127"><![CDATA[OCmd_Close := 0;]]></Line>
+      <Line Number="128"><![CDATA[]]></Line>
+      <Line Number="129"><![CDATA[]]></Line>
+      <Line Number="130"><![CDATA[(*]]></Line>
+      <Line Number="131"><![CDATA[========================================]]></Line>
+      <Line Number="132"><![CDATA[Reset command - mode-agnostic]]></Line>
+      <Line Number="133"><![CDATA[Either reset source clears alarms and resets timers]]></Line>
+      <Line Number="134"><![CDATA[========================================]]></Line>
+      <Line Number="135"><![CDATA[*)]]></Line>
+      <Line Number="136"><![CDATA[Wrk_ResetAlm := PCmd_Reset OR OCmd_Reset;]]></Line>
+      <Line Number="137"><![CDATA[]]></Line>
+      <Line Number="138"><![CDATA[PCmd_Reset := 0;]]></Line>
+      <Line Number="139"><![CDATA[OCmd_Reset := 0;]]></Line>
+      <Line Number="140"><![CDATA[]]></Line>
+      <Line Number="141"><![CDATA[]]></Line>
+      <Line Number="142"><![CDATA[(*]]></Line>
+      <Line Number="143"><![CDATA[========================================]]></Line>
+      <Line Number="144"><![CDATA[Live status - simple mirrors of live conditions]]></Line>
+      <Line Number="145"><![CDATA[========================================]]></Line>
+      <Line Number="146"><![CDATA[*)]]></Line>
+      <Line Number="147"><![CDATA[Sts_IOFault    := Inp_IOFault;]]></Line>
+      <Line Number="148"><![CDATA[Sts_IntlkTrip  := NOT Inp_IntlkOK;]]></Line>
+      <Line Number="149"><![CDATA[]]></Line>
+      <Line Number="150"><![CDATA[(* LS Fail = both limit switches active simultaneously (impossible physical state) *)]]></Line>
+      <Line Number="151"><![CDATA[Sts_LSFail := Cfg_HasOpenLS]]></Line>
+      <Line Number="152"><![CDATA[              AND Cfg_HasClosedLS]]></Line>
+      <Line Number="153"><![CDATA[              AND Inp_OpenLS]]></Line>
+      <Line Number="154"><![CDATA[              AND Inp_ClosedLS;]]></Line>
+      <Line Number="155"><![CDATA[]]></Line>
+      <Line Number="156"><![CDATA[]]></Line>
+      <Line Number="157"><![CDATA[(*]]></Line>
+      <Line Number="158"><![CDATA[========================================]]></Line>
+      <Line Number="159"><![CDATA[Physical output]]></Line>
+      <Line Number="160"><![CDATA[Out = Wrk_CmdOpen XOR Cfg_FailOpen]]></Line>
+      <Line Number="161"><![CDATA[Hand mode forces Out = 0 (de-energize - local control takes over).]]></Line>
+      <Line Number="162"><![CDATA[========================================]]></Line>
+      <Line Number="163"><![CDATA[*)]]></Line>
+      <Line Number="164"><![CDATA[IF Inp_Hand THEN]]></Line>
+      <Line Number="165"><![CDATA[    Out := 0;]]></Line>
+      <Line Number="166"><![CDATA[ELSE]]></Line>
+      <Line Number="167"><![CDATA[    Out := Wrk_CmdOpen XOR Cfg_FailOpen;]]></Line>
+      <Line Number="168"><![CDATA[END_IF;]]></Line>
+      <Line Number="169"><![CDATA[]]></Line>
+      <Line Number="170"><![CDATA[]]></Line>
+      <Line Number="171"><![CDATA[(*]]></Line>
+      <Line Number="172"><![CDATA[========================================]]></Line>
+      <Line Number="173"><![CDATA[Stall detection request signals]]></Line>
+      <Line Number="174"><![CDATA[FullStall: commanded direction, valve still at OPPOSITE (starting) LS]]></Line>
+      <Line Number="175"><![CDATA[TransitStall: commanded direction, valve not yet at TARGET LS]]></Line>
+      <Line Number="176"><![CDATA[Both use Cfg_Use*LS (not Cfg_Has*LS) so the LS can be wired for]]></Line>
+      <Line Number="177"><![CDATA[position display but excluded from failure checking if unreliable.]]></Line>
+      <Line Number="178"><![CDATA[The XIO(other.DN) interlock ensures only one alarm per event.]]></Line>
+      <Line Number="179"><![CDATA[Hand mode suppresses both.]]></Line>
+      <Line Number="180"><![CDATA[========================================]]></Line>
+      <Line Number="181"><![CDATA[*)]]></Line>
+      <Line Number="182"><![CDATA[Wrk_FullStallReq :=]]></Line>
+      <Line Number="183"><![CDATA[    ((Wrk_CmdOpen AND Cfg_UseClosedLS AND Inp_ClosedLS)]]></Line>
+      <Line Number="184"><![CDATA[     OR (NOT Wrk_CmdOpen AND Cfg_UseOpenLS AND Inp_OpenLS))]]></Line>
+      <Line Number="185"><![CDATA[    AND NOT Wrk_TransitStallTmr.DN]]></Line>
+      <Line Number="186"><![CDATA[    AND NOT Inp_Hand;]]></Line>
+      <Line Number="187"><![CDATA[]]></Line>
+      <Line Number="188"><![CDATA[Wrk_TransitStallReq :=]]></Line>
+      <Line Number="189"><![CDATA[    ((Wrk_CmdOpen AND Cfg_UseOpenLS AND NOT Inp_OpenLS)]]></Line>
+      <Line Number="190"><![CDATA[     OR (NOT Wrk_CmdOpen AND Cfg_UseClosedLS AND NOT Inp_ClosedLS))]]></Line>
+      <Line Number="191"><![CDATA[    AND NOT Wrk_FullStallTmr.DN]]></Line>
+      <Line Number="192"><![CDATA[    AND NOT Inp_Hand;]]></Line>
+      <Line Number="193"><![CDATA[]]></Line>
+      <Line Number="194"><![CDATA[]]></Line>
+      <Line Number="195"><![CDATA[(*]]></Line>
+      <Line Number="196"><![CDATA[========================================]]></Line>
+      <Line Number="197"><![CDATA[Timers]]></Line>
+      <Line Number="198"><![CDATA[Cfg_FullStallT / Cfg_TransitStallT in seconds; PRE in milliseconds.]]></Line>
+      <Line Number="199"><![CDATA[Wrk_FullStallTmr / Wrk_TransitStallTmr are FBD_TIMER structures.]]></Line>
+      <Line Number="200"><![CDATA[Timers force-reset on alarm reset so the operator gets a full timeout]]></Line>
+      <Line Number="201"><![CDATA[window after pressing Reset instead of the alarm re-firing immediately]]></Line>
+      <Line Number="202"><![CDATA[if the underlying condition persists.]]></Line>
+      <Line Number="203"><![CDATA[========================================]]></Line>
+      <Line Number="204"><![CDATA[*)]]></Line>
+      <Line Number="205"><![CDATA[Wrk_FullStallTmr.PRE := Cfg_FullStallT * 1000.0;]]></Line>
+      <Line Number="206"><![CDATA[Wrk_FullStallTmr.TimerEnable := Wrk_FullStallReq;]]></Line>
+      <Line Number="207"><![CDATA[Wrk_FullStallTmr.Reset := (NOT Wrk_FullStallReq) OR Wrk_ResetAlm;]]></Line>
+      <Line Number="208"><![CDATA[TONR(Wrk_FullStallTmr);]]></Line>
+      <Line Number="209"><![CDATA[]]></Line>
+      <Line Number="210"><![CDATA[Wrk_TransitStallTmr.PRE := Cfg_TransitStallT * 1000.0;]]></Line>
+      <Line Number="211"><![CDATA[Wrk_TransitStallTmr.TimerEnable := Wrk_TransitStallReq;]]></Line>
+      <Line Number="212"><![CDATA[Wrk_TransitStallTmr.Reset := (NOT Wrk_TransitStallReq) OR Wrk_ResetAlm;]]></Line>
+      <Line Number="213"><![CDATA[TONR(Wrk_TransitStallTmr);]]></Line>
+      <Line Number="214"><![CDATA[]]></Line>
+      <Line Number="215"><![CDATA[]]></Line>
+      <Line Number="216"><![CDATA[(*]]></Line>
+      <Line Number="217"><![CDATA[========================================]]></Line>
+      <Line Number="218"><![CDATA[Live stall statuses (from timer done bits)]]></Line>
+      <Line Number="219"><![CDATA[========================================]]></Line>
+      <Line Number="220"><![CDATA[*)]]></Line>
+      <Line Number="221"><![CDATA[Sts_FullStall    := Wrk_FullStallTmr.DN;]]></Line>
+      <Line Number="222"><![CDATA[Sts_TransitStall := Wrk_TransitStallTmr.DN;]]></Line>
+      <Line Number="223"><![CDATA[]]></Line>
+      <Line Number="224"><![CDATA[]]></Line>
+      <Line Number="225"><![CDATA[(*]]></Line>
+      <Line Number="226"><![CDATA[========================================]]></Line>
+      <Line Number="227"><![CDATA[Latched alarms]]></Line>
+      <Line Number="228"><![CDATA[Each alarm latches only if its Cfg_Has*Alm is TRUE.]]></Line>
+      <Line Number="229"><![CDATA[All alarms clear on Wrk_ResetAlm.]]></Line>
+      <Line Number="230"><![CDATA[========================================]]></Line>
+      <Line Number="231"><![CDATA[*)]]></Line>
+      <Line Number="232"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="233"><![CDATA[    Alm_IOFault := 0;]]></Line>
+      <Line Number="234"><![CDATA[ELSIF Sts_IOFault AND Cfg_HasIOFaultAlm THEN]]></Line>
+      <Line Number="235"><![CDATA[    Alm_IOFault := 1;]]></Line>
+      <Line Number="236"><![CDATA[END_IF;]]></Line>
+      <Line Number="237"><![CDATA[]]></Line>
+      <Line Number="238"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="239"><![CDATA[    Alm_IntlkTrip := 0;]]></Line>
+      <Line Number="240"><![CDATA[ELSIF Sts_IntlkTrip AND Cfg_HasIntlkTripAlm THEN]]></Line>
+      <Line Number="241"><![CDATA[    Alm_IntlkTrip := 1;]]></Line>
+      <Line Number="242"><![CDATA[END_IF;]]></Line>
+      <Line Number="243"><![CDATA[]]></Line>
+      <Line Number="244"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="245"><![CDATA[    Alm_LSFail := 0;]]></Line>
+      <Line Number="246"><![CDATA[ELSIF Sts_LSFail AND Cfg_HasLSFailAlm THEN]]></Line>
+      <Line Number="247"><![CDATA[    Alm_LSFail := 1;]]></Line>
+      <Line Number="248"><![CDATA[END_IF;]]></Line>
+      <Line Number="249"><![CDATA[]]></Line>
+      <Line Number="250"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="251"><![CDATA[    Alm_FullStall := 0;]]></Line>
+      <Line Number="252"><![CDATA[ELSIF Sts_FullStall AND Cfg_HasFullStallAlm THEN]]></Line>
+      <Line Number="253"><![CDATA[    Alm_FullStall := 1;]]></Line>
+      <Line Number="254"><![CDATA[END_IF;]]></Line>
+      <Line Number="255"><![CDATA[]]></Line>
+      <Line Number="256"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="257"><![CDATA[    Alm_TransitStall := 0;]]></Line>
+      <Line Number="258"><![CDATA[ELSIF Sts_TransitStall AND Cfg_HasTransitStallAlm THEN]]></Line>
+      <Line Number="259"><![CDATA[    Alm_TransitStall := 1;]]></Line>
+      <Line Number="260"><![CDATA[END_IF;]]></Line>
+      <Line Number="261"><![CDATA[]]></Line>
+      <Line Number="262"><![CDATA[]]></Line>
+      <Line Number="263"><![CDATA[(*]]></Line>
+      <Line Number="264"><![CDATA[========================================]]></Line>
+      <Line Number="265"><![CDATA[Latched not-ready fail]]></Line>
+      <Line Number="266"><![CDATA[Latches on LIVE Sts_FullStall or Sts_TransitStall - regardless of]]></Line>
+      <Line Number="267"><![CDATA[Cfg_HasFullStallAlm / Cfg_HasTransitStallAlm setting. The user can]]></Line>
+      <Line Number="268"><![CDATA[disable alarm latching but the device still requires a Reset before]]></Line>
+      <Line Number="269"><![CDATA[another move attempt after a stall.]]></Line>
+      <Line Number="270"><![CDATA[Cleared on reset.]]></Line>
+      <Line Number="271"><![CDATA[========================================]]></Line>
+      <Line Number="272"><![CDATA[*)]]></Line>
+      <Line Number="273"><![CDATA[IF Wrk_ResetAlm THEN]]></Line>
+      <Line Number="274"><![CDATA[    Nrdy_Fail := 0;]]></Line>
+      <Line Number="275"><![CDATA[ELSIF Sts_FullStall OR Sts_TransitStall THEN]]></Line>
+      <Line Number="276"><![CDATA[    Nrdy_Fail := 1;]]></Line>
+      <Line Number="277"><![CDATA[END_IF;]]></Line>
+      <Line Number="278"><![CDATA[]]></Line>
+      <Line Number="279"><![CDATA[]]></Line>
+      <Line Number="280"><![CDATA[(*]]></Line>
+      <Line Number="281"><![CDATA[========================================]]></Line>
+      <Line Number="282"><![CDATA[Trip condition (any latched alarm)]]></Line>
+      <Line Number="283"><![CDATA[========================================]]></Line>
+      <Line Number="284"><![CDATA[*)]]></Line>
+      <Line Number="285"><![CDATA[Wrk_Trip :=]]></Line>
+      <Line Number="286"><![CDATA[    Alm_IOFault]]></Line>
+      <Line Number="287"><![CDATA[    OR Alm_IntlkTrip]]></Line>
+      <Line Number="288"><![CDATA[    OR Alm_LSFail]]></Line>
+      <Line Number="289"><![CDATA[    OR Alm_FullStall]]></Line>
+      <Line Number="290"><![CDATA[    OR Alm_TransitStall;]]></Line>
+      <Line Number="291"><![CDATA[]]></Line>
+      <Line Number="292"><![CDATA[]]></Line>
+      <Line Number="293"><![CDATA[(*]]></Line>
+      <Line Number="294"><![CDATA[========================================]]></Line>
+      <Line Number="295"><![CDATA[Position statuses]]></Line>
+      <Line Number="296"><![CDATA[With LS: use limit switch feedback]]></Line>
+      <Line Number="297"><![CDATA[Without LS: fall back to commanded state (instant)]]></Line>
+      <Line Number="298"><![CDATA[========================================]]></Line>
+      <Line Number="299"><![CDATA[*)]]></Line>
+      <Line Number="300"><![CDATA[Sts_Opened := (Cfg_HasOpenLS AND Inp_OpenLS)]]></Line>
+      <Line Number="301"><![CDATA[              OR (NOT Cfg_HasOpenLS AND Wrk_CmdOpen);]]></Line>
+      <Line Number="302"><![CDATA[]]></Line>
+      <Line Number="303"><![CDATA[Sts_Closed := (Cfg_HasClosedLS AND Inp_ClosedLS)]]></Line>
+      <Line Number="304"><![CDATA[              OR (NOT Cfg_HasClosedLS AND NOT Wrk_CmdOpen);]]></Line>
+      <Line Number="305"><![CDATA[]]></Line>
+      <Line Number="306"><![CDATA[Sts_Opening := Wrk_CmdOpen AND NOT Sts_Opened;]]></Line>
+      <Line Number="307"><![CDATA[Sts_Closing := NOT Wrk_CmdOpen AND NOT Sts_Closed;]]></Line>
+      <Line Number="308"><![CDATA[]]></Line>
+      <Line Number="309"><![CDATA[]]></Line>
+      <Line Number="310"><![CDATA[(*]]></Line>
+      <Line Number="311"><![CDATA[========================================]]></Line>
+      <Line Number="312"><![CDATA[Rollup statuses]]></Line>
+      <Line Number="313"><![CDATA[Sts_NotRdy mirrors the master rollup used for gating.]]></Line>
+      <Line Number="314"><![CDATA[Sts_Available adds Prog mode + not-Hand check.]]></Line>
+      <Line Number="315"><![CDATA[Sts_Ready is a positive indicator (opposite of NotRdy).]]></Line>
+      <Line Number="316"><![CDATA[Sts_RdyReset means "there is a latched alarm that Reset would clear".]]></Line>
+      <Line Number="317"><![CDATA[========================================]]></Line>
+      <Line Number="318"><![CDATA[*)]]></Line>
+      <Line Number="319"><![CDATA[Sts_Prog      := Wrk_ModeAuto;]]></Line>
+      <Line Number="320"><![CDATA[Sts_Oper      := NOT Wrk_ModeAuto;]]></Line>
+      <Line Number="321"><![CDATA[Sts_NotRdy    := Wrk_NotRdy;]]></Line>
+      <Line Number="322"><![CDATA[Sts_Available := Sts_Prog AND NOT Sts_NotRdy AND NOT Inp_Hand;]]></Line>
+      <Line Number="323"><![CDATA[Sts_Ready     := NOT Wrk_Trip;]]></Line>
+      <Line Number="324"><![CDATA[Sts_RdyReset  := Wrk_Trip OR Nrdy_Fail;]]></Line>
+      <Line Number="325"><![CDATA[]]></Line>
+      <Line Number="326"><![CDATA[]]></Line>
+      <Line Number="327"><![CDATA[(*]]></Line>
+      <Line Number="328"><![CDATA[========================================]]></Line>
+      <Line Number="329"><![CDATA[Store previous-scan values for next-scan edge detection]]></Line>
+      <Line Number="330"><![CDATA[While NotRdy is TRUE, force PCmd edge history to 0 - this lets a]]></Line>
+      <Line Number="331"><![CDATA[still-held external PCmd be re-detected as a rising edge on the next]]></Line>
+      <Line Number="332"><![CDATA[scan after the not-ready condition clears. Avoids requiring the]]></Line>
+      <Line Number="333"><![CDATA[external tag to toggle off-and-on after fault recovery.]]></Line>
+      <Line Number="334"><![CDATA[OCmd edge history is NOT cleared (operator buttons are momentary).]]></Line>
+      <Line Number="335"><![CDATA[========================================]]></Line>
+      <Line Number="336"><![CDATA[*)]]></Line>
+      <Line Number="337"><![CDATA[Wrk_PrevModeAuto := Wrk_ModeAuto;]]></Line>
+      <Line Number="338"><![CDATA[]]></Line>
+      <Line Number="339"><![CDATA[IF Wrk_NotRdy THEN]]></Line>
+      <Line Number="340"><![CDATA[    Wrk_PrevPCmdOpen  := 0;]]></Line>
+      <Line Number="341"><![CDATA[    Wrk_PrevPCmdClose := 0;]]></Line>
+      <Line Number="342"><![CDATA[END_IF;]]></Line>
+</STContent>
+</Routine>
+</Routines>
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+</Controller>
+</RSLogix5000Content>
