@@ -473,7 +473,7 @@ function activeColour(
 
 function valveInformation(status) {
     switch (status) {
-        case 0:
+        case 1:
             return {
                 text: "CLOSED",
                 open: false,
@@ -482,7 +482,7 @@ function valveInformation(status) {
                 dark: colour.greyDark
             };
 
-        case 1:
+        case 2:
             return {
                 text: "OPEN",
                 open: true,
@@ -491,7 +491,7 @@ function valveInformation(status) {
                 dark: colour.greenDark
             };
 
-        case 2:
+        case 6:
             return {
                 text: "OPENING",
                 open: true,
@@ -500,7 +500,7 @@ function valveInformation(status) {
                 dark: colour.amberDark
             };
 
-        case 3:
+        case 5:
             return {
                 text: "CLOSING",
                 open: true,
