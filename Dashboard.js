@@ -3,6 +3,14 @@
 PLANT OVERVIEW DASHBOARD
 Weintek EasyBuilder Pro JavaScript Canvas Object
 
+REVISION 2026-07-22:
+    Three-card layout only.
+    Process readings are embedded in the corresponding
+    Stack Fan, Cooling Tower, and Ozone Generators cards.
+    The separate Critical Process Readings card is removed.
+    VSD outputs use a 0-50 Hz scale.
+    Cooling water flow and configurable units are added.
+
 Dynamically resizable - scales proportionally to fit
 whatever width/height the canvas object is set to in
 the designer, without distorting text or shapes.
@@ -19,6 +27,7 @@ Alarm banner removed - to be handled by a separate
 js object.
 =============================================================
 */
+
 
 
 var canvas = new Canvas();
@@ -66,17 +75,25 @@ var colour = {
 
 
 /* ==========================================================
-   CONFIGURATION
+   EASYBUILDER PRO OBJECT CONFIGURATION
+
+   All entries read from the JavaScript object's Config page.
+   Keep the names below when creating the object properties.
 ========================================================== */
 
 var cfg = {
+    /* Display units and scale */
     pressureUnit:
         this.config.pressureUnit ||
         "Pa",
 
     coolingPressureUnit:
         this.config.coolingPressureUnit ||
-        "kPa",
+        "Pa",
+
+    flowUnit:
+        this.config.flowUnit ||
+        "L/min",
 
     temperatureUnit:
         this.config.temperatureUnit ||
@@ -84,7 +101,105 @@ var cfg = {
 
     outputUnit:
         this.config.outputUnit ||
-        "%"
+        "%",
+
+    frequencyUnit:
+        this.config.frequencyUnit ||
+        "Hz",
+
+    vsdMaximum:
+        toNumber(
+            this.config.vsdMaximum,
+            50
+        ),
+
+    /* Stack fan subscriptions */
+    stackFanStatusSub:
+        this.config.stackFanStatusSub,
+    stackFanModeSub:
+        this.config.stackFanModeSub,
+    stackFanOutputSub:
+        this.config.stackFanOutputSub,
+    stackFanFaultSub:
+        this.config.stackFanFaultSub,
+    stackPressureSub:
+        this.config.stackPressureSub,
+    stackPressureFaultSub:
+        this.config.stackPressureFaultSub,
+
+    /* Cooling tower pump subscriptions */
+    coolingPumpStatusSub:
+        this.config.coolingPumpStatusSub,
+    coolingPumpModeSub:
+        this.config.coolingPumpModeSub,
+    coolingPumpOutputSub:
+        this.config.coolingPumpOutputSub,
+    coolingPumpFaultSub:
+        this.config.coolingPumpFaultSub,
+
+    /* Cooling tower fan subscriptions */
+    coolingFanStatusSub:
+        this.config.coolingFanStatusSub,
+    coolingFanModeSub:
+        this.config.coolingFanModeSub,
+    coolingFanOutputSub:
+        this.config.coolingFanOutputSub,
+    coolingFanFaultSub:
+        this.config.coolingFanFaultSub,
+
+    /* Cooling process subscriptions */
+    coolingPressureSub:
+        this.config.coolingPressureSub,
+    coolingPressureFaultSub:
+        this.config.coolingPressureFaultSub,
+    coolingTemperatureSub:
+        this.config.coolingTemperatureSub,
+    coolingTemperatureFaultSub:
+        this.config.coolingTemperatureFaultSub,
+    coolingFlowSub:
+        this.config.coolingFlowSub,
+    coolingFlowFaultSub:
+        this.config.coolingFlowFaultSub,
+
+    /* Ozone generator 1 subscriptions */
+    ozone1StatusSub:
+        this.config.ozone1StatusSub,
+    ozone1OutputSub:
+        this.config.ozone1OutputSub,
+    ozone1FaultSub:
+        this.config.ozone1FaultSub,
+
+    /* Ozone generator 2 subscriptions */
+    ozone2StatusSub:
+        this.config.ozone2StatusSub,
+    ozone2OutputSub:
+        this.config.ozone2OutputSub,
+    ozone2FaultSub:
+        this.config.ozone2FaultSub,
+
+    /* Ozone generator 3 subscriptions */
+    ozone3StatusSub:
+        this.config.ozone3StatusSub,
+    ozone3OutputSub:
+        this.config.ozone3OutputSub,
+    ozone3FaultSub:
+        this.config.ozone3FaultSub,
+
+    /* Ozone generator 4 subscriptions */
+    ozone4StatusSub:
+        this.config.ozone4StatusSub,
+    ozone4OutputSub:
+        this.config.ozone4OutputSub,
+    ozone4FaultSub:
+        this.config.ozone4FaultSub,
+
+    /* Ozone generator 5 subscriptions */
+    ozone5StatusSub:
+        this.config.ozone5StatusSub,
+    ozone5OutputSub:
+        this.config.ozone5OutputSub,
+    ozone5FaultSub:
+        this.config.ozone5FaultSub
 };
 
 
@@ -115,6 +230,9 @@ var value = {
 
     coolingTemperature: 0,
     coolingTemperatureFault: false,
+
+    coolingFlow: 0,
+    coolingFlowFault: false,
 
     ozone1Status: 0,
     ozone1Output: 0,
@@ -448,10 +566,20 @@ function drawOutputBar(
     width,
     height,
     output,
-    barColour
+    barColour,
+    maximum
 ) {
+    var maximumValue =
+        toNumber(maximum, 100);
+
+    if (maximumValue <= 0) {
+        maximumValue = 100;
+    }
+
     var percentage = clamp(
-        toNumber(output, 0),
+        toNumber(output, 0) /
+            maximumValue *
+            100,
         0,
         100
     );
@@ -609,7 +737,7 @@ function drawEquipmentCard(
             0
         ).toFixed(1) +
         " " +
-        cfg.outputUnit,
+        cfg.frequencyUnit,
         x + width - 8,
         y + 50,
         "bold 10px Arial",
@@ -623,7 +751,8 @@ function drawEquipmentCard(
         width - 18,
         5,
         primaryOutput,
-        primaryColour
+        primaryColour,
+        cfg.vsdMaximum
     );
 
     if (
@@ -685,7 +814,7 @@ function drawEquipmentCard(
                 0
             ).toFixed(1) +
             " " +
-            cfg.outputUnit,
+            cfg.frequencyUnit,
             x + width - 8,
             y + 99,
             "bold 10px Arial",
@@ -699,7 +828,8 @@ function drawEquipmentCard(
             width - 18,
             5,
             secondaryOutput,
-            secondaryColour
+            secondaryColour,
+            cfg.vsdMaximum
         );
     }
 }
@@ -933,92 +1063,18 @@ function drawOzonePanel(
         value.ozone5Output,
         value.ozone5Fault
     );
-}
-
-
-/* ==========================================================
-   CRITICAL READINGS PANEL
-========================================================== */
-
-function drawCriticalReadings() {
-    drawPanel(
-        8,
-        131,
-        484,
-        121
-    );
-
-    drawText(
-        "CRITICAL PROCESS READINGS",
-        17,
-        146,
-        "bold 10px Arial",
-        colour.text,
-        "left"
-    );
 
     drawSeparator(
-        15,
-        160,
-        485,
-        160
+        x + 7,
+        y + 128,
+        x + width - 7,
+        y + 128
     );
 
     drawText(
-        "STACK FAN",
-        18,
-        175,
-        "7px Arial",
-        colour.muted,
-        "left"
-    );
-
-    drawProcessValue(
-        18,
-        198,
-        130,
-        "Pressure",
-        value.stackPressure,
-        cfg.pressureUnit,
-        value.stackPressureFault,
-        1
-    );
-
-    drawText(
-        "COOLING TOWER",
-        183,
-        175,
-        "7px Arial",
-        colour.muted,
-        "left"
-    );
-
-    drawProcessValue(
-        183,
-        198,
-        135,
-        "Pressure",
-        value.coolingPressure,
-        cfg.coolingPressureUnit,
-        value.coolingPressureFault,
-        1
-    );
-
-    drawProcessValue(
-        183,
-        231,
-        135,
-        "Temperature",
-        value.coolingTemperature,
-        cfg.temperatureUnit,
-        value.coolingTemperatureFault,
-        1
-    );
-
-    drawText(
-        "OZONE OUTPUT",
-        352,
-        175,
+        "PROCESS",
+        x + 9,
+        y + 143,
         "7px Arial",
         colour.muted,
         "left"
@@ -1039,9 +1095,9 @@ function drawCriticalReadings() {
         value.ozone5Fault !== 0;
 
     drawProcessValue(
-        352,
-        198,
-        122,
+        x + 9,
+        y + 169,
+        width - 18,
         "Combined",
         ozoneTotal,
         cfg.outputUnit,
@@ -1073,8 +1129,8 @@ function drawCriticalReadings() {
 
     drawText(
         "Units Running",
-        352,
-        231,
+        x + 9,
+        y + 207,
         "7px Arial",
         colour.muted,
         "left"
@@ -1082,8 +1138,8 @@ function drawCriticalReadings() {
 
     drawText(
         String(unitsRunning) + " / 5",
-        474,
-        231,
+        x + width - 9,
+        y + 207,
         "bold 10px Arial",
         unitsRunning > 0
             ? colour.green
@@ -1092,10 +1148,10 @@ function drawCriticalReadings() {
     );
 
     drawSeparator(
-        352,
-        244,
-        474,
-        244
+        x + 9,
+        y + 220,
+        x + width - 9,
+        y + 220
     );
 }
 
@@ -1118,7 +1174,7 @@ function drawDashboard() {
         8,
         8,
         145,
-        115,
+        244,
         "STACK FAN",
 
         value.stackFanStatus,
@@ -1134,11 +1190,38 @@ function drawDashboard() {
         null
     );
 
+    drawSeparator(
+        15,
+        136,
+        146,
+        136
+    );
+
+    drawText(
+        "PROCESS",
+        17,
+        151,
+        "7px Arial",
+        colour.muted,
+        "left"
+    );
+
+    drawProcessValue(
+        17,
+        177,
+        127,
+        "Pressure",
+        value.stackPressure,
+        cfg.pressureUnit,
+        value.stackPressureFault,
+        1
+    );
+
     drawEquipmentCard(
         160,
         8,
         155,
-        115,
+        244,
         "COOLING TOWER",
 
         value.coolingPumpStatus,
@@ -1155,14 +1238,61 @@ function drawDashboard() {
         value.coolingFanOutput
     );
 
+    drawSeparator(
+        167,
+        136,
+        308,
+        136
+    );
+
+    drawText(
+        "PROCESS",
+        169,
+        151,
+        "7px Arial",
+        colour.muted,
+        "left"
+    );
+
+    drawProcessValue(
+        169,
+        174,
+        137,
+        "Discharge Pressure",
+        value.coolingPressure,
+        cfg.coolingPressureUnit,
+        value.coolingPressureFault,
+        1
+    );
+
+    drawProcessValue(
+        169,
+        205,
+        137,
+        "Temperature",
+        value.coolingTemperature,
+        cfg.temperatureUnit,
+        value.coolingTemperatureFault,
+        1
+    );
+
+    drawProcessValue(
+        169,
+        236,
+        137,
+        "Water Flow",
+        value.coolingFlow,
+        cfg.flowUnit,
+        value.coolingFlowFault,
+        1
+    );
+
     drawOzonePanel(
         322,
         8,
         170,
-        115
+        244
     );
-
-    drawCriticalReadings();
 }
 
 
@@ -1288,7 +1418,7 @@ function bindSubscription(
 ========================================================== */
 
 bindSubscription(
-    this.config.stackFanStatusSub,
+    cfg.stackFanStatusSub,
     "Stack fan status",
     function (input) {
         value.stackFanStatus =
@@ -1301,7 +1431,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.stackFanModeSub,
+    cfg.stackFanModeSub,
     "Stack fan mode",
     function (input) {
         value.stackFanManual =
@@ -1312,7 +1442,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.stackFanOutputSub,
+    cfg.stackFanOutputSub,
     "Stack fan output",
     function (input) {
         value.stackFanOutput =
@@ -1323,7 +1453,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.stackFanFaultSub,
+    cfg.stackFanFaultSub,
     "Stack fan fault",
     function (input) {
         value.stackFanFault =
@@ -1336,7 +1466,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.stackPressureSub,
+    cfg.stackPressureSub,
     "Stack pressure",
     function (input) {
         value.stackPressure =
@@ -1347,7 +1477,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.stackPressureFaultSub,
+    cfg.stackPressureFaultSub,
     "Stack pressure fault",
     function (input) {
         value.stackPressureFault =
@@ -1362,7 +1492,7 @@ bindSubscription(
 ========================================================== */
 
 bindSubscription(
-    this.config.coolingPumpStatusSub,
+    cfg.coolingPumpStatusSub,
     "Cooling pump status",
     function (input) {
         value.coolingPumpStatus =
@@ -1375,7 +1505,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.coolingPumpModeSub,
+    cfg.coolingPumpModeSub,
     "Cooling pump mode",
     function (input) {
         value.coolingPumpManual =
@@ -1386,7 +1516,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.coolingPumpOutputSub,
+    cfg.coolingPumpOutputSub,
     "Cooling pump output",
     function (input) {
         value.coolingPumpOutput =
@@ -1397,7 +1527,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.coolingPumpFaultSub,
+    cfg.coolingPumpFaultSub,
     "Cooling pump fault",
     function (input) {
         value.coolingPumpFault =
@@ -1414,7 +1544,7 @@ bindSubscription(
 ========================================================== */
 
 bindSubscription(
-    this.config.coolingFanStatusSub,
+    cfg.coolingFanStatusSub,
     "Cooling fan status",
     function (input) {
         value.coolingFanStatus =
@@ -1427,7 +1557,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.coolingFanModeSub,
+    cfg.coolingFanModeSub,
     "Cooling fan mode",
     function (input) {
         value.coolingFanManual =
@@ -1438,7 +1568,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.coolingFanOutputSub,
+    cfg.coolingFanOutputSub,
     "Cooling fan output",
     function (input) {
         value.coolingFanOutput =
@@ -1449,7 +1579,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.coolingFanFaultSub,
+    cfg.coolingFanFaultSub,
     "Cooling fan fault",
     function (input) {
         value.coolingFanFault =
@@ -1466,7 +1596,7 @@ bindSubscription(
 ========================================================== */
 
 bindSubscription(
-    this.config.coolingPressureSub,
+    cfg.coolingPressureSub,
     "Cooling water pressure",
     function (input) {
         value.coolingPressure =
@@ -1477,7 +1607,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.coolingPressureFaultSub,
+    cfg.coolingPressureFaultSub,
     "Cooling water pressure fault",
     function (input) {
         value.coolingPressureFault =
@@ -1488,7 +1618,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.coolingTemperatureSub,
+    cfg.coolingTemperatureSub,
     "Cooling water temperature",
     function (input) {
         value.coolingTemperature =
@@ -1499,10 +1629,32 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.coolingTemperatureFaultSub,
+    cfg.coolingTemperatureFaultSub,
     "Cooling water temperature fault",
     function (input) {
         value.coolingTemperatureFault =
+            Boolean(input);
+    },
+    true
+);
+
+
+bindSubscription(
+    cfg.coolingFlowSub,
+    "Cooling water flow",
+    function (input) {
+        value.coolingFlow =
+            toNumber(input, 0);
+    },
+    0
+);
+
+
+bindSubscription(
+    cfg.coolingFlowFaultSub,
+    "Cooling water flow fault",
+    function (input) {
+        value.coolingFlowFault =
             Boolean(input);
     },
     true
@@ -1514,7 +1666,7 @@ bindSubscription(
 ========================================================== */
 
 bindSubscription(
-    this.config.ozone1StatusSub,
+    cfg.ozone1StatusSub,
     "Ozone unit 1 status",
     function (input) {
         value.ozone1Status =
@@ -1527,7 +1679,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.ozone1OutputSub,
+    cfg.ozone1OutputSub,
     "Ozone unit 1 output",
     function (input) {
         value.ozone1Output =
@@ -1538,7 +1690,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.ozone1FaultSub,
+    cfg.ozone1FaultSub,
     "Ozone unit 1 fault",
     function (input) {
         value.ozone1Fault =
@@ -1555,7 +1707,7 @@ bindSubscription(
 ========================================================== */
 
 bindSubscription(
-    this.config.ozone2StatusSub,
+    cfg.ozone2StatusSub,
     "Ozone unit 2 status",
     function (input) {
         value.ozone2Status =
@@ -1568,7 +1720,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.ozone2OutputSub,
+    cfg.ozone2OutputSub,
     "Ozone unit 2 output",
     function (input) {
         value.ozone2Output =
@@ -1579,7 +1731,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.ozone2FaultSub,
+    cfg.ozone2FaultSub,
     "Ozone unit 2 fault",
     function (input) {
         value.ozone2Fault =
@@ -1596,7 +1748,7 @@ bindSubscription(
 ========================================================== */
 
 bindSubscription(
-    this.config.ozone3StatusSub,
+    cfg.ozone3StatusSub,
     "Ozone unit 3 status",
     function (input) {
         value.ozone3Status =
@@ -1609,7 +1761,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.ozone3OutputSub,
+    cfg.ozone3OutputSub,
     "Ozone unit 3 output",
     function (input) {
         value.ozone3Output =
@@ -1620,7 +1772,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.ozone3FaultSub,
+    cfg.ozone3FaultSub,
     "Ozone unit 3 fault",
     function (input) {
         value.ozone3Fault =
@@ -1637,7 +1789,7 @@ bindSubscription(
 ========================================================== */
 
 bindSubscription(
-    this.config.ozone4StatusSub,
+    cfg.ozone4StatusSub,
     "Ozone unit 4 status",
     function (input) {
         value.ozone4Status =
@@ -1650,7 +1802,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.ozone4OutputSub,
+    cfg.ozone4OutputSub,
     "Ozone unit 4 output",
     function (input) {
         value.ozone4Output =
@@ -1661,7 +1813,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.ozone4FaultSub,
+    cfg.ozone4FaultSub,
     "Ozone unit 4 fault",
     function (input) {
         value.ozone4Fault =
@@ -1678,7 +1830,7 @@ bindSubscription(
 ========================================================== */
 
 bindSubscription(
-    this.config.ozone5StatusSub,
+    cfg.ozone5StatusSub,
     "Ozone unit 5 status",
     function (input) {
         value.ozone5Status =
@@ -1691,7 +1843,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.ozone5OutputSub,
+    cfg.ozone5OutputSub,
     "Ozone unit 5 output",
     function (input) {
         value.ozone5Output =
@@ -1702,7 +1854,7 @@ bindSubscription(
 
 
 bindSubscription(
-    this.config.ozone5FaultSub,
+    cfg.ozone5FaultSub,
     "Ozone unit 5 fault",
     function (input) {
         value.ozone5Fault =
