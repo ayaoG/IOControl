@@ -37,6 +37,11 @@ Reset:
 
 Step time:
     PLC tag is already in seconds.
+
+Sequence status display:
+    sequenceStatusSub supplies the status word used only for
+    the displayed sequence status text. sequenceRunningSub
+    remains the independent source for START / STOP logic.
 */
 
 
@@ -196,6 +201,10 @@ const COLOUR_STOP_DARK = "#991B1B";
 const COLOUR_RESET = "#F59E0B";
 const COLOUR_RESET_DARK = "#A16207";
 
+const COLOUR_STANDBY = "#38BDF8";
+const COLOUR_MANUAL = "#FACC15";
+const COLOUR_MINOR_FAULT = "#F97316";
+
 
 /*
 ============================================================
@@ -255,6 +264,7 @@ let currentDateText = "";
 let currentTimeText = "";
 
 let sequenceRunning = false;
+let sequenceStatusWord = 0;
 let readyReset = false;
 
 let startCommand = false;
@@ -413,6 +423,76 @@ function formatStepTime(secondsValue) {
         ":" +
         padTwo(seconds)
     );
+}
+
+
+function getSequenceStatusText() {
+    switch (sequenceStatusWord) {
+        case 1:
+            return "ACTIVE";
+
+        case 2:
+            return "IDLE";
+
+        case 3:
+            return "STANDBY";
+
+        case 4:
+            return "RUNNING";
+
+        case 5:
+            return "HOLD";
+
+        case 6:
+            return "DEVICE IN MANUAL";
+
+        case 7:
+            return "MINOR FAULT";
+
+        case 8:
+            return "POWERUP HOLD";
+
+        case 9:
+            return "POWERUP";
+
+        case 10:
+            return "LATCH FAULT";
+
+        default:
+            return "UNKNOWN";
+    }
+}
+
+
+function getSequenceStatusColour() {
+    switch (sequenceStatusWord) {
+        case 1:
+        case 4:
+            return COLOUR_ACTIVE;
+
+        case 2:
+            return COLOUR_TEXT_SECONDARY;
+
+        case 3:
+        case 9:
+            return COLOUR_STANDBY;
+
+        case 5:
+        case 8:
+            return COLOUR_RESET;
+
+        case 6:
+            return COLOUR_MANUAL;
+
+        case 7:
+            return COLOUR_MINOR_FAULT;
+
+        case 10:
+            return COLOUR_STOP;
+
+        default:
+            return COLOUR_TEXT_DARK;
+    }
 }
 
 
@@ -1404,10 +1484,10 @@ function drawSequenceButton(
         enabled;
 
     let fillColour =
-        "rgba(48,59,68,0.70)";
+        activeFillColour;
 
     let borderColour =
-        COLOUR_BORDER;
+        normalColour;
 
     let textColour =
         normalColour;
@@ -1423,7 +1503,10 @@ function drawSequenceButton(
             COLOUR_TEXT_DARK;
     }
 
-    if (active) {
+    if (
+        active &&
+        enabled
+    ) {
         fillColour =
             activeFillColour;
 
@@ -1463,7 +1546,7 @@ function drawSequenceButton(
         borderColour;
 
     ctx.lineWidth =
-        active || pressed
+        (active && enabled) || pressed
             ? 2
             : 1;
 
@@ -1645,9 +1728,7 @@ function drawSequencePanel(ctx) {
     Running status.
     */
     ctx.fillStyle =
-        sequenceRunning
-            ? COLOUR_ACTIVE
-            : COLOUR_TEXT_DARK;
+        getSequenceStatusColour();
 
     ctx.font =
         "bold 10px Arial";
@@ -1656,9 +1737,7 @@ function drawSequencePanel(ctx) {
         "right";
 
     ctx.fillText(
-        sequenceRunning
-            ? "RUNNING"
-            : "STOPPED",
+        getSequenceStatusText(),
         panel.x +
         panel.width -
         15,
@@ -2419,6 +2498,57 @@ CONFIG.sequenceRunningSub.onResponse(
         }
     }
 );
+
+
+/*
+============================================================
+SEQUENCE STATUS WORD SUBSCRIPTION
+
+Display only. This does not change sequenceRunning or any
+START / STOP button logic.
+============================================================
+*/
+
+if (
+    CONFIG.sequenceStatusSub &&
+    typeof CONFIG.sequenceStatusSub.onResponse ===
+    "function"
+) {
+    CONFIG.sequenceStatusSub.onResponse(
+        (err, data) => {
+            if (err) {
+                console.log(
+                    "Sequence status word error:",
+                    err.message
+                );
+
+                return;
+            }
+
+            if (
+                data &&
+                data.values &&
+                data.values.length > 0
+            ) {
+                const value =
+                    Number(
+                        data.values[0]
+                    );
+
+                sequenceStatusWord =
+                    Number.isFinite(value)
+                        ? Math.round(value)
+                        : 0;
+
+                drawFrame();
+            }
+        }
+    );
+} else {
+    console.log(
+        "Sequence status word subscription not configured"
+    );
+}
 
 
 /*

@@ -1400,7 +1400,7 @@ function drawPidValues(
     );
 
     ctx.fillStyle =
-        COLOUR_GREEN;
+        COLOUR_TEXT_DARK;
 
     ctx.font =
         "bold 9px Arial";
@@ -1427,7 +1427,7 @@ function drawPidValues(
     );
 
     ctx.fillStyle =
-        COLOUR_BLUE;
+        COLOUR_TEXT_DARK;
 
     ctx.font =
         "bold 9px Arial";
@@ -1454,7 +1454,7 @@ function drawPidValues(
     );
 
     ctx.fillStyle =
-        COLOUR_AMBER;
+        COLOUR_TEXT_DARK;
 
     ctx.font =
         "bold 9px Arial";

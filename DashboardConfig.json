@@ -13,6 +13,7 @@
     "stackFanFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "stackPressureSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "stackPressureFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "ovenStartSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
 
     "coolingPumpStatusSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "coolingPumpModeSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",

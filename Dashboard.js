@@ -126,6 +126,8 @@ var cfg = {
         this.config.stackPressureSub,
     stackPressureFaultSub:
         this.config.stackPressureFaultSub,
+    ovenStartSub:
+        this.config.ovenStartSub,
 
     /* Cooling tower pump subscriptions */
     coolingPumpStatusSub:
@@ -214,6 +216,7 @@ var value = {
     stackFanFault: 0,
     stackPressure: 0,
     stackPressureFault: false,
+    ovenStartSignal: false,
 
     coolingPumpStatus: 0,
     coolingPumpManual: false,
@@ -683,7 +686,7 @@ function drawEquipmentCard(
         "7px Arial",
         manualMode
             ? colour.amber
-            : colour.blue,
+            : colour.muted,
         "right"
     );
 
@@ -927,7 +930,7 @@ function drawProcessValue(
                     ? colour.red
                     : colour.redDark
             )
-            : colour.blue;
+            : colour.text;
 
     drawText(
         label,
@@ -1188,6 +1191,44 @@ function drawDashboard() {
         null,
         null,
         null
+    );
+
+    drawSeparator(
+        15,
+        82,
+        146,
+        82
+    );
+
+    var ovenStartColour =
+        value.ovenStartSignal
+            ? colour.green
+            : colour.grey;
+
+    drawStatusLamp(
+        20,
+        101,
+        ovenStartColour
+    );
+
+    drawText(
+        "OVEN START SIGNAL",
+        30,
+        101,
+        "7px Arial",
+        colour.muted,
+        "left"
+    );
+
+    drawText(
+        value.ovenStartSignal
+            ? "ON"
+            : "OFF",
+        145,
+        101,
+        "7px Arial",
+        ovenStartColour,
+        "right"
     );
 
     drawSeparator(
@@ -1484,6 +1525,17 @@ bindSubscription(
             Boolean(input);
     },
     true
+);
+
+
+bindSubscription(
+    cfg.ovenStartSub,
+    "Oven start signal",
+    function (input) {
+        value.ovenStartSignal =
+            toNumber(input, 0) !== 0;
+    },
+    false
 );
 
 

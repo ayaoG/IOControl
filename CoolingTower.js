@@ -1781,85 +1781,143 @@ function drawPumpOutputPanel(
 ========================================================= */
 
 function drawPIDPanel(
-    x,
-    y
+    centreX,
+    topY
 ) {
-    const width = 150;
-    const height = 47;
+    const panelWidth = 126;
+    const panelHeight = 57;
 
-    drawPanel(
-        x,
-        y,
-        width,
-        height
+    const panelX =
+        centreX -
+        panelWidth / 2;
+
+    const pvX =
+        panelX + 21;
+
+    const svX =
+        panelX + 63;
+
+    const cvX =
+        panelX + 105;
+
+    canvas.fillStyle =
+        "rgba(25,32,38,0.95)";
+
+    roundedRectangle(
+        canvas,
+        panelX,
+        topY,
+        panelWidth,
+        panelHeight,
+        7
     );
+
+    canvas.fill();
+
+    canvas.strokeStyle =
+        "rgba(105,118,128,0.65)";
+
+    canvas.lineWidth = 1;
+
+    roundedRectangle(
+        canvas,
+        panelX,
+        topY,
+        panelWidth,
+        panelHeight,
+        7
+    );
+
+    canvas.stroke();
 
     drawText(
         "PRESSURE PID",
-        x + width / 2,
-        y + 8,
+        centreX,
+        topY + 10,
+        "bold 9px Arial",
+        colour.muted
+    );
+
+    drawText(
+        "PV",
+        pvX,
+        topY + 24,
+        "bold 9px Arial",
+        colour.muted
+    );
+
+    drawText(
+        numberValue(
+            value.pidPV,
+            0
+        ).toFixed(1),
+        pvX,
+        topY + 39,
+        "bold 11px Arial",
+        colour.text
+    );
+
+    drawText(
+        "SV",
+        svX,
+        topY + 24,
+        "bold 9px Arial",
+        colour.muted
+    );
+
+    drawText(
+        numberValue(
+            value.pidSV,
+            0
+        ).toFixed(1),
+        svX,
+        topY + 39,
+        "bold 11px Arial",
+        colour.text
+    );
+
+    drawText(
+        "CV",
+        cvX,
+        topY + 24,
+        "bold 9px Arial",
+        colour.muted
+    );
+
+    drawText(
+        numberValue(
+            value.pidCV,
+            0
+        ).toFixed(1),
+        cvX,
+        topY + 39,
+        "bold 11px Arial",
+        colour.text
+    );
+
+    drawText(
+        cfg.pressureUnit,
+        pvX,
+        topY + 51,
         "bold 7px Arial",
         colour.muted
     );
 
-    const labels = [
-        "PV",
-        "SV",
-        "CV"
-    ];
-
-    const values = [
-        numberValue(
-            value.pidPV,
-            0
-        ).toFixed(1) +
-        " " +
+    drawText(
         cfg.pressureUnit,
+        svX,
+        topY + 51,
+        "bold 7px Arial",
+        colour.muted
+    );
 
-        numberValue(
-            value.pidSV,
-            0
-        ).toFixed(1) +
-        " " +
-        cfg.pressureUnit,
-
-        numberValue(
-            value.pidCV,
-            0
-        ).toFixed(1) +
-        " " +
-        cfg.pumpOutputUnit
-    ];
-
-    for (
-        let index = 0;
-        index < 3;
-        index++
-    ) {
-        const sectionCentre =
-            x +
-            25 +
-            index *
-            50;
-
-        drawText(
-            labels[index],
-            sectionCentre,
-            y + 22,
-            "bold 6px Arial",
-            colour.muted
-        );
-
-        drawText(
-            values[index],
-            sectionCentre,
-            y + 36,
-            "bold 9px Arial",
-            index === 2
-                ? colour.green
-                : colour.text
-        );
-    }
+    drawText(
+        cfg.pumpOutputUnit,
+        cvX,
+        topY + 51,
+        "bold 7px Arial",
+        colour.muted
+    );
 }
 
 
@@ -2033,7 +2091,7 @@ function drawScene() {
     */
 
     drawPIDPanel(
-        95,
+        170,
         56
     );
 
