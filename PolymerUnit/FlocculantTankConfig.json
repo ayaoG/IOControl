@@ -1,0 +1,10 @@
+{
+    "tankName": "FLOCCULANT TANK",
+    "instrumentTag": "LT-101",
+    "levelUnit": "%",
+    "levelMinimum": 0,
+    "levelMaximum": 100,
+    "levelDecimals": 1,
+    "levelSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "levelFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
+}
