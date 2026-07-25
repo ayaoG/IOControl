@@ -211,9 +211,9 @@ function formatLevel() {
 function drawStatusBadge(ctx) {
     var condition = getConditionType();
     var statusText = "OK";
-    var x = 201;
-    var y = 17;
-    var width = 81;
+    var x = 95;
+    var y = 270;
+    var width = 110;
     var height = 24;
 
     if (condition === "fault") {
@@ -430,60 +430,31 @@ function drawValueCard(ctx) {
     );
 }
 
-function drawFaultMessage(ctx) {
-    var signalFault = hasSignalFault();
-    var message = "";
-
-    if (!signalFault) {
-        return;
-    }
-
-    if (faultReadError) {
-        message = "LEVEL SIGNAL UNAVAILABLE";
-    } else {
-        message =
-            "LT FAULT - " +
-            getLevelFaultText();
-    }
-
-    ctx.fillStyle = getConditionSoftColour();
-    roundedRect(ctx, 22, 270, 260, 24, 6);
-    ctx.fill();
-
-    ctx.fillStyle = getConditionColour();
-    ctx.font = "bold 10px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(message, 152, 282);
-}
-
 function drawTankObject(ctx) {
     ctx.fillStyle = colour.background;
     ctx.fillRect(0, 0, DESIGN_WIDTH, DESIGN_HEIGHT);
 
     ctx.fillStyle = colour.primary;
     ctx.font = "bold 15px Arial";
-    ctx.textAlign = "left";
+    ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(tankName, 18, 29);
+    ctx.fillText(tankName, 150, 34);
 
     ctx.fillStyle = colour.secondary;
     ctx.font = "9px Arial";
-    ctx.fillText("POLYMER MAKE-UP", 18, 47);
-
-    drawStatusBadge(ctx);
+    ctx.fillText("POLYMER MAKE-UP", 150, 53);
 
     ctx.strokeStyle = colour.border;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(18, 59.5);
-    ctx.lineTo(282, 59.5);
+    ctx.moveTo(45, 69.5);
+    ctx.lineTo(255, 69.5);
     ctx.stroke();
 
     drawTank(ctx);
     drawValueCard(ctx);
     drawTransmitter(ctx);
-    drawFaultMessage(ctx);
+    drawStatusBadge(ctx);
 }
 
 function draw() {

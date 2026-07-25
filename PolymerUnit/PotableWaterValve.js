@@ -7,7 +7,9 @@ Design size: 200 x 180 px
 Standalone equipment object - no pipeline is drawn.
 
 Required subscriptions:
-    valveStatusSub  1 closed, 2 open, 5 closing, 6 opening
+    valveStatusSub  0 off, 1 on, 2 pulse off, 3 pulse on,
+                    4 pulse continuous, 5 turning on,
+                    6 turning off
     valveFaultSub   0 healthy, nonzero fault
 ============================================================
 */
@@ -71,25 +73,49 @@ function roundedRect(ctx, x, y, width, height, radius) {
 
 function getValveInformation() {
     switch (valveStatus) {
-        case 1:
+        case 0:
             return {
-                text: "CLOSED",
+                text: "OFF",
                 colour: colour.grey,
                 soft: colour.greySoft,
                 flashing: false
             };
 
-        case 2:
+        case 1:
             return {
-                text: "OPEN",
+                text: "ON",
                 colour: colour.blue,
                 soft: colour.blueSoft,
                 flashing: false
             };
 
+        case 2:
+            return {
+                text: "PULSE OFF",
+                colour: colour.yellow,
+                soft: colour.yellowSoft,
+                flashing: true
+            };
+
+        case 3:
+            return {
+                text: "PULSE ON",
+                colour: colour.blue,
+                soft: colour.blueSoft,
+                flashing: true
+            };
+
+        case 4:
+            return {
+                text: "PULSE CONT",
+                colour: colour.blue,
+                soft: colour.blueSoft,
+                flashing: true
+            };
+
         case 5:
             return {
-                text: "CLOSING",
+                text: "TURNING ON",
                 colour: colour.yellow,
                 soft: colour.yellowSoft,
                 flashing: true
@@ -97,7 +123,7 @@ function getValveInformation() {
 
         case 6:
             return {
-                text: "OPENING",
+                text: "TURNING OFF",
                 colour: colour.yellow,
                 soft: colour.yellowSoft,
                 flashing: true
@@ -111,6 +137,15 @@ function getValveInformation() {
                 flashing: false
             };
     }
+}
+
+function isOnPosition() {
+    return (
+        valveStatus === 1 ||
+        valveStatus === 3 ||
+        valveStatus === 4 ||
+        valveStatus === 5
+    );
 }
 
 function getActiveColour() {
@@ -194,7 +229,7 @@ function drawActuator(ctx, centreX, valveY) {
     ctx.fillStyle = activeColour;
     ctx.beginPath();
     ctx.arc(
-        valveStatus === 2
+        isOnPosition()
             ? centreX + 8
             : centreX - 8,
         actuatorY + 17,
@@ -255,9 +290,11 @@ function drawValveBody(ctx) {
 
 function drawLabels(ctx) {
     var information = getValveInformation();
-    var activeColour = getActiveColour();
-    var statusText =
-        valveFault ? "FAULT" : information.text;
+    var positionColour = information.colour;
+
+    if (information.flashing && !flashVisible) {
+        positionColour = colour.grey;
+    }
 
     ctx.fillStyle = colour.text;
     ctx.font = "bold 13px Arial";
@@ -265,22 +302,38 @@ function drawLabels(ctx) {
     ctx.textBaseline = "middle";
     ctx.fillText(valveName, 100, 20);
 
+    /*
+    Valve position state replaces the old top tag location.
+    */
+    ctx.fillStyle = positionColour;
+    ctx.font = "bold 9px Arial";
+    ctx.fillText(information.text, 100, 37);
+
+    /*
+    Equipment tag sits between the valve symbol and fault area.
+    */
     ctx.fillStyle = colour.muted;
     ctx.font = "9px Arial";
-    ctx.fillText(valveTag, 100, 37);
+    ctx.textAlign = "center";
+    ctx.fillText(valveTag, 100, 137);
 
-    ctx.fillStyle = getActiveSoftColour();
-    roundedRect(ctx, 61, 146, 78, 24, 12);
-    ctx.fill();
+    /*
+    No healthy fault indicator is drawn.
+    */
+    if (valveFault) {
+        ctx.fillStyle = getActiveSoftColour();
+        roundedRect(ctx, 61, 148, 78, 22, 11);
+        ctx.fill();
 
-    ctx.fillStyle = activeColour;
-    ctx.beginPath();
-    ctx.arc(75, 158, 3.5, 0, Math.PI * 2);
-    ctx.fill();
+        ctx.fillStyle = getActiveColour();
+        ctx.beginPath();
+        ctx.arc(75, 159, 3.5, 0, Math.PI * 2);
+        ctx.fill();
 
-    ctx.font = "bold 9px Arial";
-    ctx.textAlign = "left";
-    ctx.fillText(statusText, 85, 158);
+        ctx.font = "bold 9px Arial";
+        ctx.textAlign = "left";
+        ctx.fillText("FAULT", 85, 159);
+    }
 }
 
 function drawValveObject(ctx) {

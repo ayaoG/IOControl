@@ -87,10 +87,9 @@ LOW and HIGH retain the level reading and use yellow. LOW-LOW and
 HIGH-HIGH retain the reading and use orange. Signal faults and unknown
 nonzero codes use red and replace the reading with `---`. LOW/HIGH
 pulse every second; LOW-LOW/HIGH-HIGH and signal faults flash every
-500 ms. Level condition appears in the top status badge; a separate LT
-fault message appears below the tank only while a signal fault is
-active. A missing fault subscription or communication error forces
-code `32`. A transient
+500 ms. The tank title is centred and the level-condition/fault badge
+is displayed below the vessel. A missing fault subscription or
+communication error forces code `32`. A transient
 `levelSub` error retains the last valid level reading. After
 `levelFaultSub` has supplied its first valid response, a transient
 fault-subscription error also retains the last valid fault code.
@@ -119,8 +118,13 @@ only while a real fault is active.
 `PotableWaterValve.js` is a standalone 200 × 180 actuated-valve object
 with no pipeline. Import `PotableWaterValveConfig.json` and configure:
 
-- `valveStatusSub`: `1` closed, `2` open, `5` closing, `6` opening.
+- `valveStatusSub`: `0` off, `1` on, `2` pulse off, `3` pulse on,
+  `4` pulse continuous, `5` turning on, `6` turning off.
 - `valveFaultSub`: `0` healthy, nonzero fault.
+
+The position state is shown below the title. The equipment tag is
+between the valve symbol and the fault area. The fault indicator is
+hidden while healthy.
 
 ### Static mixer
 

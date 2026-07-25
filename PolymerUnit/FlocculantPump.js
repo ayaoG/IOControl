@@ -369,8 +369,8 @@ function drawStatus(ctx) {
     Equipment tag restored below the pump.
     */
     ctx.fillStyle = colour.muted;
-    ctx.font = "8px Arial";
-    ctx.fillText(vsdTag, 150, 188);
+    ctx.font = "9px Arial";
+    ctx.fillText(vsdTag, 144, 188);
 
     /*
     Fault status is only drawn while a real fault is active.
