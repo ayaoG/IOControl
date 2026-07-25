@@ -1,0 +1,10 @@
+{
+    "pumpName": "FLOCCULANT PUMP",
+    "vsdTag": "P-101",
+    "outputUnit": "%",
+    "outputDecimals": 1,
+    "pumpStatusSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "pumpModeSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "pumpOutputSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "pumpFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
+}

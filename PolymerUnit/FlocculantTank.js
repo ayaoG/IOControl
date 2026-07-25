@@ -217,7 +217,7 @@ function drawStatusBadge(ctx) {
     var height = 24;
 
     if (condition === "fault") {
-        statusText = "LT FAULT";
+        statusText = "NO SIGNAL";
     } else if (condition !== "normal") {
         statusText = getLevelFaultText();
     }
@@ -431,19 +431,18 @@ function drawValueCard(ctx) {
 }
 
 function drawFaultMessage(ctx) {
-    var faulted = hasFault();
+    var signalFault = hasSignalFault();
+    var message = "";
 
-    if (!faulted) {
+    if (!signalFault) {
         return;
     }
 
-    var message = "LEVEL TRANSMITTER FAULT";
-
     if (faultReadError) {
         message = "LEVEL SIGNAL UNAVAILABLE";
-    } else if (levelFaultCode !== 0) {
+    } else {
         message =
-            "LEVEL TRANSMITTER - " +
+            "LT FAULT - " +
             getLevelFaultText();
     }
 

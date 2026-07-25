@@ -87,8 +87,46 @@ LOW and HIGH retain the level reading and use yellow. LOW-LOW and
 HIGH-HIGH retain the reading and use orange. Signal faults and unknown
 nonzero codes use red and replace the reading with `---`. LOW/HIGH
 pulse every second; LOW-LOW/HIGH-HIGH and signal faults flash every
-500 ms. A missing fault subscription or communication error forces
-code `32`. A transient `levelSub` error retains the last valid level
-reading. After `levelFaultSub` has supplied its first valid response,
-a transient fault-subscription error also retains the last valid fault
-code. Startup remains fail-safe if no valid fault response is received.
+500 ms. Level condition appears in the top status badge; a separate LT
+fault message appears below the tank only while a signal fault is
+active. A missing fault subscription or communication error forces
+code `32`. A transient
+`levelSub` error retains the last valid level reading. After
+`levelFaultSub` has supplied its first valid response, a transient
+fault-subscription error also retains the last valid fault code.
+Startup remains fail-safe if no valid fault response is received.
+
+## Flocculant dosing process
+
+### Flocculant VSD pump
+
+`FlocculantPump.js` is a standalone 300 × 220 equipment object with no
+pipeline. Import `FlocculantPumpConfig.json` and configure:
+
+- `pumpStatusSub`: `1` stopped, `2` running forward, `3` running
+  reverse, `5` starting forward, `6` starting reverse, `10` stopping.
+- `pumpModeSub`: `0` automatic, nonzero manual.
+- `pumpOutputSub`: VSD output value.
+- `pumpFaultSub`: `0` healthy, `16` fail to start, `17` fail to stop,
+  `18` drive fault, `32` I/O fault.
+
+The title and operating state are centred above the pump. The equipment
+tag is displayed below the pump. Fault status appears below the tag
+only while a real fault is active.
+
+### Potable water valve
+
+`PotableWaterValve.js` is a standalone 200 × 180 actuated-valve object
+with no pipeline. Import `PotableWaterValveConfig.json` and configure:
+
+- `valveStatusSub`: `1` closed, `2` open, `5` closing, `6` opening.
+- `valveFaultSub`: `0` healthy, nonzero fault.
+
+### Static mixer
+
+`StaticMixer.js` is a standalone 180 × 120 mixer symbol with no
+pipeline or PLC values. Import `StaticMixerConfig.json` to set its
+display name and equipment tag.
+
+The pump, valve, and mixer are intentionally independent so separate
+pipeline JS objects can be added and positioned later.
