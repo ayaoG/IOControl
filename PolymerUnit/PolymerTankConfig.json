@@ -1,0 +1,11 @@
+{
+    "tankName": "POLYMER TANK",
+    "lowSwitchTag": "LSL-201",
+    "highSwitchTag": "LSH-201",
+    "mixerName": "MIXER",
+    "mixerTag": "M-201",
+    "lowLevelSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "highLevelSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "mixerStatusSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "mixerFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
+}

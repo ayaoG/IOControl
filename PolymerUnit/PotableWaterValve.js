@@ -3,7 +3,7 @@
 POLYMER UNIT - POTABLE WATER CONTROL VALVE
 Weintek EasyBuilder Pro JS Object
 
-Design size: 200 x 180 px
+Design size: 180 x 175 px
 Standalone equipment object - no pipeline is drawn.
 
 Required subscriptions:
@@ -17,8 +17,8 @@ Required subscriptions:
 var canvas = new Canvas();
 this.widget.add(canvas);
 
-var DESIGN_WIDTH = 200;
-var DESIGN_HEIGHT = 180;
+var DESIGN_WIDTH = 180;
+var DESIGN_HEIGHT = 175;
 
 var config = this.config || {};
 var valveName = config.valveName || "POTABLE WATER VALVE";
@@ -339,9 +339,6 @@ function drawLabels(ctx) {
 }
 
 function drawValveObject(ctx) {
-    ctx.fillStyle = colour.background;
-    ctx.fillRect(0, 0, DESIGN_WIDTH, DESIGN_HEIGHT);
-
     drawValveBody(ctx);
     drawLabels(ctx);
 }
@@ -367,6 +364,7 @@ function draw() {
         (height - DESIGN_HEIGHT * scale) / 2
     );
     canvas.scale(scale, scale);
+    canvas.translate(-10, 0);
     drawValveObject(canvas);
     canvas.restore();
 }

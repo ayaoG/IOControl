@@ -61,7 +61,7 @@ project uses different base-window numbers or labels.
 
 ## Flocculant tank
 
-`FlocculantTank.js` is a 300 × 300 display object for the polymer
+`FlocculantTank.js` is a transparent 230 × 260 display object for the polymer
 make-up page. Import `FlocculantTankConfig.json` through the JS Object
 **Config > Template** editor, then configure:
 
@@ -97,9 +97,31 @@ Startup remains fail-safe if no valid fault response is received.
 
 ## Flocculant dosing process
 
+### Polymer batch tank
+
+`PolymerTank.js` is a transparent 190 × 280 tank object using two
+discrete level switches and a top-mounted DOL mixer. Import
+`PolymerTankConfig.json` and configure:
+
+- `lowLevelSub`: low switch wet/active status.
+- `highLevelSub`: high switch wet/active status used to start batching.
+- `mixerStatusSub`: `0` off, `1` on, `2` pulse off, `3` pulse on,
+  `4` pulse continuous, `5` turning on, `6` turning off.
+- `mixerFaultSub`: `0` none, `16` on/off fail, `32` I/O fault,
+  `34` configuration error.
+
+The high switch is shown around 65% of vessel height so the batch-start
+level retains headspace. The graphic infers low, filling, and
+batch-ready fill bands from the two switches. A high-active/low-dry
+combination is displayed as a switch conflict.
+
+The DOL mixer has no speed value. Its shaft and impeller animate for
+running states, transition states flash, and its fault message is only
+shown while a nonzero mixer fault code is active.
+
 ### Flocculant VSD pump
 
-`FlocculantPump.js` is a standalone 300 × 220 equipment object with no
+`FlocculantPump.js` is a standalone transparent 180 × 220 equipment object with no
 pipeline. Import `FlocculantPumpConfig.json` and configure:
 
 - `pumpStatusSub`: `1` stopped, `2` running forward, `3` running
@@ -115,7 +137,7 @@ only while a real fault is active.
 
 ### Potable water valve
 
-`PotableWaterValve.js` is a standalone 200 × 180 actuated-valve object
+`PotableWaterValve.js` is a standalone transparent 180 × 175 actuated-valve object
 with no pipeline. Import `PotableWaterValveConfig.json` and configure:
 
 - `valveStatusSub`: `0` off, `1` on, `2` pulse off, `3` pulse on,
@@ -135,7 +157,7 @@ display name and equipment tag.
 
 ### Flow meter
 
-`FlowMeter.js` is a standalone, transparent 180 × 120 flow-transmitter
+`FlowMeter.js` is a standalone, transparent 130 × 105 flow-transmitter
 object. Import `FlowMeterConfig.json` and configure:
 
 - `waterFlowSub`: numeric flow engineering value, normally a 32-bit
@@ -151,6 +173,11 @@ a transient value-subscription error retains the last valid reading.
 
 The pump, valve, mixer, and flow meter are intentionally independent
 so separate pipeline JS objects can be added and positioned later.
+
+After updating these sources in EasyBuilder Pro, resize the placed JS
+objects to their documented design sizes. The pump, valve, tank, and
+flow-meter canvases are transparent and tightly cropped so adjacent
+objects can overlap geometrically without hiding one another.
 
 ## Sequence control panel
 

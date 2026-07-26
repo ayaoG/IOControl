@@ -3,7 +3,7 @@
 POLYMER UNIT - FLOCCULANT TANK
 Weintek EasyBuilder Pro JS Object
 
-Design size: 300 x 300 px
+Design size: 230 x 260 px
 
 Required subscriptions:
     levelSub       - level transmitter engineering value
@@ -14,8 +14,8 @@ Required subscriptions:
 var canvas = new Canvas();
 this.widget.add(canvas);
 
-var DESIGN_WIDTH = 300;
-var DESIGN_HEIGHT = 300;
+var DESIGN_WIDTH = 230;
+var DESIGN_HEIGHT = 260;
 
 var config = this.config || {};
 
@@ -431,9 +431,6 @@ function drawValueCard(ctx) {
 }
 
 function drawTankObject(ctx) {
-    ctx.fillStyle = colour.background;
-    ctx.fillRect(0, 0, DESIGN_WIDTH, DESIGN_HEIGHT);
-
     ctx.fillStyle = colour.secondary;
     ctx.font = "11px Arial";
     ctx.textAlign = "center";
@@ -478,6 +475,7 @@ function draw() {
     canvas.save();
     canvas.translate(offsetX, offsetY);
     canvas.scale(scale, scale);
+    canvas.translate(-35, -40);
     drawTankObject(canvas);
     canvas.restore();
 }

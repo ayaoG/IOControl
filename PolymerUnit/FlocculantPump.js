@@ -3,7 +3,7 @@
 POLYMER UNIT - FLOCCULANT VSD PUMP
 Weintek EasyBuilder Pro JS Object
 
-Design size: 300 x 220 px
+Design size: 180 x 220 px
 
 Required subscriptions:
     pumpStatusSub  1 stopped, 2 run fwd, 3 run rev,
@@ -17,7 +17,7 @@ Required subscriptions:
 var canvas = new Canvas();
 this.widget.add(canvas);
 
-var DESIGN_WIDTH = 300;
+var DESIGN_WIDTH = 180;
 var DESIGN_HEIGHT = 220;
 
 var config = this.config || {};
@@ -228,8 +228,8 @@ function drawPumpBlade(ctx, centreX, centreY, angle, bladeColour) {
 }
 
 function drawPump(ctx) {
-    var centreX = 145;
-    var centreY = 140;
+    var centreX = 85;
+    var centreY = 125;
     var activeColour = getActiveColour();
 
     ctx.fillStyle = colour.surface;
@@ -294,8 +294,8 @@ function drawPump(ctx) {
 }
 
 function drawVsd(ctx) {
-    var x = 111;
-    var y = 61;
+    var x = 51;
+    var y = 52;
     var width = 68;
     var height = 42;
     var activeColour = getActiveColour();
@@ -303,8 +303,8 @@ function drawVsd(ctx) {
     ctx.strokeStyle = colour.borderDark;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(145, y + height);
-    ctx.lineTo(145, 109);
+    ctx.moveTo(85, y + height);
+    ctx.lineTo(85, 95);
     ctx.stroke();
 
     ctx.fillStyle = getActiveSoftColour();
@@ -356,45 +356,42 @@ function drawStatus(ctx) {
     ctx.font = "11px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(pumpName, 150, 30);
+    ctx.fillText(pumpName, 85, 28);
 
     /*
     Operating state centred below the equipment title.
     */
     ctx.fillStyle = statusColour;
     ctx.font = "bold 10px Arial";
-    ctx.fillText(information.text, 150, 47);
+    ctx.fillText(information.text, 85, 42);
 
     /*
     Equipment tag restored below the pump.
     */
     ctx.fillStyle = colour.muted;
     ctx.font = "9px Arial";
-    ctx.fillText(vsdTag, 144, 188);
+    ctx.fillText(vsdTag, 84, 174);
 
     /*
     Fault status is only drawn while a real fault is active.
     */
     if (hasFault()) {
         ctx.fillStyle = getActiveSoftColour();
-        roundedRect(ctx, 70, 197, 160, 20, 10);
+        roundedRect(ctx, 10, 183, 160, 20, 10);
         ctx.fill();
 
         ctx.fillStyle = getActiveColour();
         ctx.beginPath();
-        ctx.arc(84, 207, 3.5, 0, Math.PI * 2);
+        ctx.arc(24, 193, 3.5, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.font = "bold 9px Arial";
         ctx.textAlign = "left";
-        ctx.fillText(getFaultText(), 94, 207);
+        ctx.fillText(getFaultText(), 34, 193);
     }
 }
 
 function drawPumpObject(ctx) {
-    ctx.fillStyle = colour.background;
-    ctx.fillRect(0, 0, DESIGN_WIDTH, DESIGN_HEIGHT);
-
     drawPump(ctx);
     drawVsd(ctx);
     drawStatus(ctx);

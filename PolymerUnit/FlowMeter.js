@@ -3,7 +3,7 @@
 POLYMER UNIT - FLOW METER
 Weintek EasyBuilder Pro JS Object
 
-Design size: 180 x 120 px
+Design size: 130 x 105 px
 
 Required subscriptions:
     waterFlowSub       - flow engineering value
@@ -14,8 +14,8 @@ Required subscriptions:
 var canvas = new Canvas();
 this.widget.add(canvas);
 
-var DESIGN_WIDTH = 180;
-var DESIGN_HEIGHT = 120;
+var DESIGN_WIDTH = 130;
+var DESIGN_HEIGHT = 105;
 
 var config = this.config || {};
 var meterName = config.meterName || "WATER FLOW";
@@ -106,6 +106,7 @@ function draw() {
         (height - DESIGN_HEIGHT * scale) / 2
     );
     canvas.scale(scale, scale);
+    canvas.translate(-25, -8);
     drawFlowMeter(canvas);
     canvas.restore();
 }
