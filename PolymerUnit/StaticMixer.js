@@ -19,7 +19,6 @@ var mixerName = config.mixerName || "STATIC MIXER";
 var mixerTag = config.mixerTag || "MX-101";
 
 var colour = {
-    background: "#F7F9FA",
     surface: "#FFFFFF",
     border: "#A9B6BD",
     text: "#2B3A43",
@@ -65,9 +64,6 @@ function drawMixer(ctx) {
 }
 
 function drawMixerObject(ctx) {
-    ctx.fillStyle = colour.background;
-    ctx.fillRect(0, 0, DESIGN_WIDTH, DESIGN_HEIGHT);
-
     ctx.fillStyle = colour.text;
     ctx.font = "bold 13px Arial";
     ctx.textAlign = "center";

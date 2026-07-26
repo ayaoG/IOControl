@@ -124,7 +124,8 @@ with no pipeline. Import `PotableWaterValveConfig.json` and configure:
 
 The position state is shown below the title. The equipment tag is
 between the valve symbol and the fault area. The fault indicator is
-hidden while healthy.
+hidden while healthy. `ON` is green; `TURNING ON` and `TURNING OFF`
+flash blue.
 
 ### Static mixer
 
@@ -132,5 +133,50 @@ hidden while healthy.
 pipeline or PLC values. Import `StaticMixerConfig.json` to set its
 display name and equipment tag.
 
-The pump, valve, and mixer are intentionally independent so separate
-pipeline JS objects can be added and positioned later.
+### Flow meter
+
+`FlowMeter.js` is a standalone, transparent 180 × 120 flow-transmitter
+object. Import `FlowMeterConfig.json` and configure:
+
+- `waterFlowSub`: numeric flow engineering value, normally a 32-bit
+  float.
+- `waterFlowFaultSub`: Boolean fault value; `0` is healthy and nonzero
+  is faulted.
+- `flowUnit` and `flowDecimals`: numeric display formatting.
+- `meterName` and `instrumentTag`: display name and equipment tag.
+
+The subscription names match the Ozone cooling-tower flow meter. A
+fault or unavailable fault subscription shows a flashing red `FAULT`;
+a transient value-subscription error retains the last valid reading.
+
+The pump, valve, mixer, and flow meter are intentionally independent
+so separate pipeline JS objects can be added and positioned later.
+
+## Sequence control panel
+
+`SequenceControlPanel.js` is a 437 × 150 object. Two panels placed at
+x 150 and x 587 span the 874 px content area. Import
+`SequenceControlPanelConfig.json` separately for each panel and assign
+each copy to its own sequence tags.
+
+The configuration matches the Ozone main-frame sequence interface:
+
+- `startCmdWrite`, `stopCmdWrite`, `resetCmdWrite`: writable Boolean
+  addresses.
+- `sequenceRunningSub`: controls START/STOP button availability.
+- `sequenceStatusSub`: sequence status word used for display only.
+- `readyResetSub`: enables the RESET button.
+- `startCmdSub`, `stopCmdSub`, `resetCmdSub`: command readbacks.
+- `stepNumberSub`: current integer sequence step.
+- `stepTimeSub`: elapsed step time supplied in seconds.
+- `stepMessageSub`: current PLC step-message string.
+
+START clears STOP to `0`, then writes START to `1`. STOP clears START
+to `0`, then writes STOP to `1`. These are maintained commands. RESET
+writes `1` and returns to `0` after 300 ms.
+
+The Ozone status-word mapping is retained:
+
+- `1` active, `2` idle, `3` standby, `4` running
+- `5` hold, `6` device in manual, `7` minor fault
+- `8` powerup hold, `9` powerup, `10` latch fault

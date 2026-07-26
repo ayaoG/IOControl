@@ -434,21 +434,21 @@ function drawTankObject(ctx) {
     ctx.fillStyle = colour.background;
     ctx.fillRect(0, 0, DESIGN_WIDTH, DESIGN_HEIGHT);
 
-    ctx.fillStyle = colour.primary;
-    ctx.font = "bold 15px Arial";
+    ctx.fillStyle = colour.secondary;
+    ctx.font = "11px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(tankName, 150, 34);
+    ctx.fillText(tankName, 150, 55);
 
     ctx.fillStyle = colour.secondary;
     ctx.font = "9px Arial";
-    ctx.fillText("POLYMER MAKE-UP", 150, 53);
+    ctx.fillText("POLYMER MAKE-UP", 150, 72);
 
     ctx.strokeStyle = colour.border;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(45, 69.5);
-    ctx.lineTo(255, 69.5);
+    ctx.moveTo(45, 84.5);
+    ctx.lineTo(255, 84.5);
     ctx.stroke();
 
     drawTank(ctx);

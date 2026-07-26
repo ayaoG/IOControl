@@ -33,6 +33,8 @@ var colour = {
     muted: "#71808A",
     grey: "#7D8A91",
     greySoft: "#E8ECEF",
+    green: "#2E9B69",
+    greenSoft: "#DDF3E8",
     blue: "#3B82C4",
     blueSoft: "#E1EEF8",
     yellow: "#D6A800",
@@ -84,8 +86,8 @@ function getValveInformation() {
         case 1:
             return {
                 text: "ON",
-                colour: colour.blue,
-                soft: colour.blueSoft,
+                colour: colour.green,
+                soft: colour.greenSoft,
                 flashing: false
             };
 
@@ -116,16 +118,16 @@ function getValveInformation() {
         case 5:
             return {
                 text: "TURNING ON",
-                colour: colour.yellow,
-                soft: colour.yellowSoft,
+                colour: colour.blue,
+                soft: colour.blueSoft,
                 flashing: true
             };
 
         case 6:
             return {
                 text: "TURNING OFF",
-                colour: colour.yellow,
-                soft: colour.yellowSoft,
+                colour: colour.blue,
+                soft: colour.blueSoft,
                 flashing: true
             };
 
@@ -296,18 +298,18 @@ function drawLabels(ctx) {
         positionColour = colour.grey;
     }
 
-    ctx.fillStyle = colour.text;
-    ctx.font = "bold 13px Arial";
+    ctx.fillStyle = colour.muted;
+    ctx.font = "11px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(valveName, 100, 20);
+    ctx.fillText(valveName, 100, 27);
 
     /*
     Valve position state replaces the old top tag location.
     */
     ctx.fillStyle = positionColour;
     ctx.font = "bold 9px Arial";
-    ctx.fillText(information.text, 100, 37);
+    ctx.fillText(information.text, 100, 43);
 
     /*
     Equipment tag sits between the valve symbol and fault area.

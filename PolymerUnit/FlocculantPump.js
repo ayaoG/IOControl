@@ -352,18 +352,18 @@ function drawStatus(ctx) {
         statusColour = colour.grey;
     }
 
-    ctx.fillStyle = colour.text;
-    ctx.font = "bold 14px Arial";
+    ctx.fillStyle = colour.muted;
+    ctx.font = "11px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(pumpName, 150, 24);
+    ctx.fillText(pumpName, 150, 30);
 
     /*
     Operating state centred below the equipment title.
     */
     ctx.fillStyle = statusColour;
     ctx.font = "bold 10px Arial";
-    ctx.fillText(information.text, 150, 43);
+    ctx.fillText(information.text, 150, 47);
 
     /*
     Equipment tag restored below the pump.

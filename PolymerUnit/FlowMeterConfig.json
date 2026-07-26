@@ -1,0 +1,8 @@
+{
+    "meterName": "WATER FLOW",
+    "instrumentTag": "FT-101",
+    "flowUnit": "L/min",
+    "flowDecimals": 1,
+    "waterFlowSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "waterFlowFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
+}
