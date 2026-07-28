@@ -11,7 +11,8 @@ Command logic matches Ozone/Main Frame.js:
     STOP  - clear START, then maintain STOP at 1
     RESET - pulse RESET from 1 to 0 over 300 ms
 
-Step time is supplied by the PLC in seconds.
+Step time is supplied as a PLC TIME value in milliseconds and is
+converted to seconds before display.
 ============================================================
 */
 
@@ -26,6 +27,10 @@ var DESIGN_HEIGHT = 150;
 
 var config = this.config || {};
 var panelTitle = config.panelTitle || "SEQUENCE CONTROL";
+var stepTimeDivisor = Math.max(
+    1,
+    safeNumber(config.stepTimeDivisor, 1000)
+);
 
 var startCmdWrite = config.startCmdWrite;
 var stopCmdWrite = config.stopCmdWrite;
@@ -630,7 +635,9 @@ bindSubscription(
     config.stepTimeSub,
     "Step time",
     function (input) {
-        stepTimeSeconds = safeNumber(input, 0);
+        stepTimeSeconds =
+            safeNumber(input, 0) /
+            stepTimeDivisor;
     }
 );
 

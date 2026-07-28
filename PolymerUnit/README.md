@@ -195,7 +195,9 @@ The configuration matches the Ozone main-frame sequence interface:
 - `readyResetSub`: enables the RESET button.
 - `startCmdSub`, `stopCmdSub`, `resetCmdSub`: command readbacks.
 - `stepNumberSub`: current integer sequence step.
-- `stepTimeSub`: elapsed step time supplied in seconds.
+- `stepTimeSub`: elapsed PLC `TIME` value supplied in milliseconds.
+- `stepTimeDivisor`: conversion divisor; defaults to `1000` to display
+  the PLC `TIME` value as seconds.
 - `stepMessageSub`: current PLC step-message string.
 
 START clears STOP to `0`, then writes START to `1`. STOP clears START

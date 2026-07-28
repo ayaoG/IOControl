@@ -1,5 +1,6 @@
 {
     "panelTitle": "SEQUENCE CONTROL",
+    "stepTimeDivisor": 1000,
     "startCmdWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "stopCmdWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "resetCmdWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
