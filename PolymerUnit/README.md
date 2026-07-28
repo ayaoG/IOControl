@@ -7,6 +7,7 @@ screen.
 |---|---:|---:|
 | `Header.js` | x 0, y 0 | 1024 × 35 |
 | `Navigation.js` | x 0, y 35 | 150 × 530 |
+| `NavigationNoDosing.js` | x 0, y 35 | 150 × 530 |
 | `Footer.js` | x 0, y 565 | 1024 × 35 |
 | `ContentBackground.js` | x 150, y 35 | 874 × 530 |
 
@@ -53,11 +54,44 @@ Default page mapping:
 Edit the `navigationItems` array in `Navigation.js` if the EasyBuilder
 project uses different base-window numbers or labels.
 
+`NavigationNoDosing.js` is a separate version with the Dosing tab
+removed. It retains the original window numbers: 10 Overview, 11
+Make-up, and 13-16 Setpoints through Settings. Import
+`NavigationNoDosingConfig.json` for its configuration.
+
 ### Footer
 
 - `footerText`: defaults to `POLYMER PROCESS CONTROL`
 - `operatorName`: defaults to `OPERATOR`
 - `revision`: defaults to `REV 1.0`
+
+## VSD faceplate
+
+`VSD_Faceplate.js` is a 560 × 360 control faceplate showing Auto/Manual
+mode, command direction, VSD status, header fault status, current,
+speed feedback, voltage, power, manual speed, and the last fault code.
+Auto and Manual write `0` and `1` respectively to one maintained
+`modeWrite` tag. Start Forward, Stop, and Reset issue configurable
+300 ms command pulses. In Manual mode, Start Forward is enabled only
+when `vsdStatusSub` is Stopped (`1`), Stop is enabled when the status
+is not Stopped, and Reset is enabled when `readyResetSub` is on.
+
+Import `VSD_FaceplateConfig.json` through the JS Object **Config >
+Template** editor. Its subscription and write fields use the Local HMI
+placeholder address; assign each one to its corresponding PLC tag from
+the Config tab.
+
+The faceplate deliberately leaves two wide areas on the left for native
+EasyBuilder objects:
+
+- Add the last-fault display at x 26, y 156, size 230 × 32 relative to
+  the faceplate. The JS faceplate does not subscribe to this value.
+- Add a Numeric Input at x 72, y 232, size 138 × 36. Enable its popup
+  keypad and interlock it so input is allowed only when the mode tag
+  equals `1`. Configure it to the same tag used by `manualSpeedSub` and
+  `manualSpeedWrite`. The JS area remains blank for this native object;
+  the adjacent −/+ buttons adjust the value in `manualSpeedStep`
+  increments, defaulting to 0.5 Hz.
 
 ## Flocculant tank
 
