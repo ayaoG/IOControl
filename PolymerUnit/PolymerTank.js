@@ -10,6 +10,8 @@ Required subscriptions:
     lowLevelSub   - low switch wet/active status
     highLevelSub  - batch-start high switch wet/active status
     mixerStatusSub - DOL mixer operating status
+    mixerModeSub   - 0 automatic, nonzero manual
+    mixerInterlockSub - 0 clear, nonzero interlocked
     mixerFaultSub  - DOL mixer numeric fault code
 
 Switch interpretation:
@@ -59,6 +61,8 @@ var lowHasValidValue = false;
 var highHasValidValue = false;
 
 var mixerStatus = 0;
+var mixerManual = false;
+var mixerInterlocked = false;
 var mixerFaultCode = 0;
 
 var levelFlashVisible = true;
@@ -629,6 +633,49 @@ function drawMixer(ctx) {
     }
 }
 
+function drawMixerModeIndication(ctx) {
+    if (!mixerInterlocked && !mixerManual) {
+        return;
+    }
+
+    var x = 145;
+    var y = 54;
+    var width = 42;
+    var height = 40;
+    var indicationColour =
+        mixerInterlocked ? colour.red : colour.yellow;
+    var indicationSoft =
+        mixerInterlocked ? colour.redSoft : colour.yellowSoft;
+
+    ctx.fillStyle = indicationSoft;
+    roundedRect(ctx, x, y, width, height, 6);
+    ctx.fill();
+
+    ctx.strokeStyle = indicationColour;
+    ctx.lineWidth = 1.5;
+    roundedRect(ctx, x, y, width, height, 6);
+    ctx.stroke();
+
+    ctx.fillStyle = colour.muted;
+    ctx.font = "bold 7px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(
+        mixerInterlocked ? "STATUS" : "MODE",
+        x + width / 2,
+        y + 10
+    );
+
+    ctx.fillStyle = indicationColour;
+    ctx.font =
+        mixerInterlocked ? "bold 8px Arial" : "bold 10px Arial";
+    ctx.fillText(
+        mixerInterlocked ? "INTLK" : "MAN",
+        x + width / 2,
+        y + 26
+    );
+}
+
 function drawLevelSwitch(
     ctx,
     centreY,
@@ -712,6 +759,7 @@ function drawPolymerTank(ctx) {
 
     drawTank(ctx);
     drawMixer(ctx);
+    drawMixerModeIndication(ctx);
 
     /*
     High switch is deliberately around 65% of vessel height,
@@ -861,6 +909,24 @@ bindNumeric(
     "Polymer tank mixer status",
     function (input) {
         mixerStatus = Math.round(safeNumber(input, 0));
+    },
+    0
+);
+
+bindNumeric(
+    config.mixerModeSub,
+    "Polymer tank mixer mode",
+    function (input) {
+        mixerManual = safeNumber(input, 0) !== 0;
+    },
+    0
+);
+
+bindNumeric(
+    config.mixerInterlockSub,
+    "Polymer tank mixer interlock",
+    function (input) {
+        mixerInterlocked = safeNumber(input, 0) !== 0;
     },
     0
 );

@@ -7,13 +7,23 @@ screen.
 |---|---:|---:|
 | `Header.js` | x 0, y 0 | 1024 × 35 |
 | `Navigation.js` | x 0, y 35 | 150 × 530 |
-| `NavigationNoDosing.js` | x 0, y 35 | 150 × 530 |
+| `NavigationNoMakeupDosing.js` | x 0, y 35 | 150 × 530 |
 | `Footer.js` | x 0, y 565 | 1024 × 35 |
 | `ContentBackground.js` | x 150, y 35 | 874 × 530 |
+| `OverviewContentBackground.js` | x 150, y 35 | 865 × 370 |
+| `SetpointsContentBackground.js` | x 150, y 35 | 865 × 370 |
+| `SettingsContentBackground.js` | x 150, y 35 | 865 × 370 |
+| `StatusInstrumentPanel.js` | user positioned | 437 × 150 |
 
 Place `ContentBackground.js` behind all objects on each content page.
 Its light-grey fill matches the navigation, footer, and polymer process
 objects so their edges blend into the frame.
+
+Page-specific copies are provided for the Overview, Setpoints, and
+Settings windows. Each uses the same position, size, and colour and
+should remain behind all other objects on its page. Each page-specific
+background includes a subtle outline, an upper-left page title, and a
+light teal header fade into the standard content background colour.
 
 ## Object configuration
 
@@ -54,10 +64,10 @@ Default page mapping:
 Edit the `navigationItems` array in `Navigation.js` if the EasyBuilder
 project uses different base-window numbers or labels.
 
-`NavigationNoDosing.js` is a separate version with the Dosing tab
-removed. It retains the original window numbers: 10 Overview, 11
-Make-up, and 13-16 Setpoints through Settings. Import
-`NavigationNoDosingConfig.json` for its configuration.
+`NavigationNoMakeupDosing.js` is a separate version with the Make-Up
+and Dosing tabs removed. It retains the original window numbers:
+10 Overview and 13-16 Setpoints through Settings. Import
+`NavigationNoMakeupDosingConfig.json` for its configuration.
 
 ### Footer
 
@@ -92,6 +102,21 @@ EasyBuilder objects:
   `manualSpeedWrite`. The JS area remains blank for this native object;
   the adjacent −/+ buttons adjust the value in `manualSpeedStep`
   increments, defaulting to 0.5 Hz.
+
+## Digital output faceplate
+
+`DigitalOutputFaceplate.js` is a 480 × 230 light-theme control
+faceplate. It shows Auto/Manual mode, device status, and fault status,
+with On, Off, and Reset controls. The equipment title and tag are left
+blank for native EasyBuilder text objects.
+
+Import `DigitalOutputFaceplateConfig.json` through the JS Object
+**Config > Template** editor. Auto and Manual write `0` and `1` to the
+maintained `modeWrite` tag. On and Off use separate momentary
+`onCmdWrite` and `offCmdWrite` tags. In Manual mode, On is enabled when
+the device status is Off (`0`), Off is enabled when the status is not
+Off, and Reset is enabled by `readyResetSub`. On, Off, and Reset use
+configurable 300 ms pulses.
 
 ## Flocculant tank
 
@@ -208,6 +233,18 @@ a transient value-subscription error retains the last valid reading.
 The pump, valve, mixer, and flow meter are intentionally independent
 so separate pipeline JS objects can be added and positioned later.
 
+The flocculant-pump VSD speed panel is centred above the pump with
+clearance from the casing. Its separate `MAN` badge is shown only in
+Manual mode. The potable-water valve uses the same Manual-only badge,
+driven by `valveModeSub` (`0` Auto, nonzero Manual). Boolean
+`pumpInterlockSub` and `valveInterlockSub` indications have higher
+priority: an active interlock replaces the mode badge with a red
+`INTLK` badge.
+
+The Polymer Tank mixer follows the same priority through
+`mixerModeSub` and `mixerInterlockSub`: red `INTLK` overrides yellow
+`MAN`, and normal Auto mode shows no badge.
+
 After updating these sources in EasyBuilder Pro, resize the placed JS
 objects to their documented design sizes. The pump, valve, tank, and
 flow-meter canvases are transparent and tightly cropped so adjacent
@@ -243,3 +280,44 @@ The Ozone status-word mapping is retained:
 - `1` active, `2` idle, `3` standby, `4` running
 - `5` hold, `6` device in manual, `7` minor fault
 - `8` powerup hold, `9` powerup, `10` latch fault
+
+## Plain status and instrument panel
+
+`StatusInstrumentPanel.js` is a blank 437 × 150 light-theme panel with
+the same footprint, corner radius, and border as the Sequence Control
+Panel. It has no configuration or subscriptions. Place native
+EasyBuilder labels, status indicators, numeric displays, and instrument
+readings over it.
+
+`InstrumentReadingWidget.js` is a 200 × 30 horizontal widget configured
+with `instrumentName`, `readingSub`, `readingDecimals`, and
+`readingUnit`.
+
+`BooleanStatusWidget.js` is a 200 × 30 widget configured with
+`statusName`, `statusSub`, `onText`, and `offText`. ON uses green and
+OFF uses neutral grey; unavailable data displays `---`.
+
+`VSDStatusSpeedWidget.js` is a 200 × 30 horizontal widget configured
+with `vsdName`, Boolean `runningSub`, numeric `speedSub`,
+`speedDecimals`, and `speedUnit`. Its dot is green while running and
+neutral grey while off.
+
+`NumericSetpointWidget.js` is a 360 × 44 control with configurable
+name, unit, limits, increment, setpoint subscription, and write
+address. Its −/+ buttons adjust the current value. Place an EasyBuilder
+Numeric Input at x 213, y 7, size 60 × 30 relative to the widget and
+configure it to the same setpoint tag for built-in keypad entry.
+`privilegeSub` must be true to enable the −/+ controls. Configure the
+native Numeric Input with the same privilege tag as its interlock so
+keypad entry follows the same permission.
+
+`NumericSetpointInputWidget.js` is a simplified 360 × 44 version
+without increment or decrement controls. Place a native EasyBuilder
+Numeric Input at x 213, y 7, size 60 × 30. Configure the PLC address,
+limits, numeric format, and popup keypad directly on that native
+object.
+
+`BooleanSetpointWidget.js` is a 220 × 44 maintained Boolean control.
+Its configurable `offText` and `onText` buttons write `0` and `1` to
+`setpointWrite`, while `setpointSub` controls the active indication.
+Its OFF/ON controls are enabled only when `privilegeSub` is true.

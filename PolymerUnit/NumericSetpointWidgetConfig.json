@@ -1,0 +1,10 @@
+{
+    "setpointName": "SETPOINT",
+    "setpointUnit": "Hz",
+    "setpointMinimum": 0,
+    "setpointMaximum": 100,
+    "setpointIncrement": 0.5,
+    "setpointSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "privilegeSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "setpointWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
+}

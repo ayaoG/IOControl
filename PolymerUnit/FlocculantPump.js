@@ -9,6 +9,7 @@ Required subscriptions:
     pumpStatusSub  1 stopped, 2 run fwd, 3 run rev,
                    5 starting fwd, 6 starting rev, 10 stopping
     pumpModeSub    0 automatic, nonzero manual
+    pumpInterlockSub  0 clear, nonzero interlocked
     pumpOutputSub  VSD output engineering value
     pumpFaultSub   0 healthy, 16/17/18/32 fault codes
 ============================================================
@@ -51,6 +52,7 @@ var colour = {
 
 var pumpStatus = 0;
 var pumpManual = false;
+var pumpInterlocked = false;
 var pumpOutput = 0;
 var pumpFaultCode = 0;
 
@@ -295,9 +297,9 @@ function drawPump(ctx) {
 
 function drawVsd(ctx) {
     var x = 51;
-    var y = 52;
+    var y = 50;
     var width = 68;
-    var height = 42;
+    var height = 40;
     var activeColour = getActiveColour();
 
     ctx.strokeStyle = colour.borderDark;
@@ -329,18 +331,48 @@ function drawVsd(ctx) {
         x + width / 2,
         y + 27
     );
+}
 
-    ctx.fillStyle = pumpManual ? colour.yellow : colour.grey;
-    ctx.beginPath();
-    ctx.arc(x + width - 8, y + 8, 5, 0, Math.PI * 2);
+function drawModeIndication(ctx) {
+    if (!pumpInterlocked && !pumpManual) {
+        return;
+    }
+
+    var x = 126;
+    var y = 50;
+    var width = 42;
+    var height = 40;
+    var modeColour =
+        pumpInterlocked ? colour.red : colour.yellow;
+    var modeSoft =
+        pumpInterlocked ? colour.redSoft : colour.yellowSoft;
+
+    ctx.fillStyle = modeSoft;
+    roundedRect(ctx, x, y, width, height, 6);
     ctx.fill();
 
-    ctx.fillStyle = colour.surface;
+    ctx.strokeStyle = modeColour;
+    ctx.lineWidth = 1.5;
+    roundedRect(ctx, x, y, width, height, 6);
+    ctx.stroke();
+
+    ctx.fillStyle = colour.muted;
     ctx.font = "bold 7px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     ctx.fillText(
-        pumpManual ? "M" : "A",
-        x + width - 8,
-        y + 8
+        pumpInterlocked ? "STATUS" : "MODE",
+        x + width / 2,
+        y + 10
+    );
+
+    ctx.fillStyle = modeColour;
+    ctx.font =
+        pumpInterlocked ? "bold 8px Arial" : "bold 10px Arial";
+    ctx.fillText(
+        pumpInterlocked ? "INTLK" : "MAN",
+        x + width / 2,
+        y + 26
     );
 }
 
@@ -394,6 +426,7 @@ function drawStatus(ctx) {
 function drawPumpObject(ctx) {
     drawPump(ctx);
     drawVsd(ctx);
+    drawModeIndication(ctx);
     drawStatus(ctx);
 }
 
@@ -470,6 +503,15 @@ bindSubscription(
     "Flocculant pump mode",
     function (input) {
         pumpManual = safeNumber(input, 0) !== 0;
+    },
+    0
+);
+
+bindSubscription(
+    config.pumpInterlockSub,
+    "Flocculant pump interlock",
+    function (input) {
+        pumpInterlocked = safeNumber(input, 0) !== 0;
     },
     0
 );

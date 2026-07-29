@@ -10,6 +10,8 @@ Required subscriptions:
     valveStatusSub  0 off, 1 on, 2 pulse off, 3 pulse on,
                     4 pulse continuous, 5 turning on,
                     6 turning off
+    valveModeSub    0 automatic, nonzero manual
+    valveInterlockSub  0 clear, nonzero interlocked
     valveFaultSub   0 healthy, nonzero fault
 ============================================================
 */
@@ -44,6 +46,8 @@ var colour = {
 };
 
 var valveStatus = 0;
+var valveManual = false;
+var valveInterlocked = false;
 var valveFault = true;
 var flashVisible = true;
 
@@ -290,6 +294,41 @@ function drawValveBody(ctx) {
     drawActuator(ctx, centreX, centreY);
 }
 
+function drawModeIndication(ctx) {
+    if (!valveInterlocked && !valveManual) {
+        return;
+    }
+
+    var x = 145;
+    var y = 53;
+    var width = 44;
+    var height = 30;
+    var modeColour =
+        valveInterlocked ? colour.red : colour.yellow;
+    var modeSoft =
+        valveInterlocked ? colour.redSoft : colour.yellowSoft;
+
+    ctx.fillStyle = modeSoft;
+    roundedRect(ctx, x, y, width, height, 6);
+    ctx.fill();
+
+    ctx.strokeStyle = modeColour;
+    ctx.lineWidth = 1.4;
+    roundedRect(ctx, x, y, width, height, 6);
+    ctx.stroke();
+
+    ctx.fillStyle = modeColour;
+    ctx.font =
+        valveInterlocked ? "bold 8px Arial" : "bold 9px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(
+        valveInterlocked ? "INTLK" : "MAN",
+        x + width / 2,
+        y + height / 2
+    );
+}
+
 function drawLabels(ctx) {
     var information = getValveInformation();
     var positionColour = information.colour;
@@ -340,6 +379,7 @@ function drawLabels(ctx) {
 
 function drawValveObject(ctx) {
     drawValveBody(ctx);
+    drawModeIndication(ctx);
     drawLabels(ctx);
 }
 
@@ -408,6 +448,24 @@ bindSubscription(
     "Potable water valve status",
     function (input) {
         valveStatus = Math.round(safeNumber(input, 0));
+    },
+    0
+);
+
+bindSubscription(
+    config.valveModeSub,
+    "Potable water valve mode",
+    function (input) {
+        valveManual = safeNumber(input, 0) !== 0;
+    },
+    0
+);
+
+bindSubscription(
+    config.valveInterlockSub,
+    "Potable water valve interlock",
+    function (input) {
+        valveInterlocked = safeNumber(input, 0) !== 0;
     },
     0
 );

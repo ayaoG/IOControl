@@ -1,0 +1,11 @@
+{
+    "commandPulseMs": 300,
+    "modeSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "deviceStatusSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "faultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "readyResetSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "modeWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "onCmdWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "offCmdWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "resetCmdWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
+}

@@ -7,5 +7,7 @@
     "lowLevelSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "highLevelSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "mixerStatusSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "mixerModeSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "mixerInterlockSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "mixerFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
 }

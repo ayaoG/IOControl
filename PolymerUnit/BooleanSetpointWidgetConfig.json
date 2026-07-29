@@ -1,0 +1,8 @@
+{
+    "setpointName": "ENABLE",
+    "onText": "ON",
+    "offText": "OFF",
+    "setpointSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "privilegeSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "setpointWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
+}

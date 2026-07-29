@@ -1,5 +1,5 @@
 /*
-POLYMER UNIT - NAVIGATION WITHOUT DOSING
+POLYMER UNIT - NAVIGATION WITHOUT MAKE-UP OR DOSING
 Weintek EasyBuilder Pro JS Object
 Object size: 150 x 530 px; place at x=0, y=35.
 */
@@ -25,10 +25,9 @@ var colour = {
     accentSoft: "#DDF4F0"
 };
 
-// Window 12 remains reserved for Dosing but is not shown.
+// Windows 11 and 12 remain reserved but are not shown.
 var navigationItems = [
     { window: 10, text: "OVERVIEW", icon: "overview" },
-    { window: 11, text: "MAKE-UP", icon: "mix" },
     { window: 13, text: "SETPOINTS", icon: "setpoint" },
     { window: 14, text: "TRENDS", icon: "trend" },
     { window: 15, text: "ALARMS", icon: "alarm" },
