@@ -63,7 +63,7 @@ var highHasValidValue = false;
 var mixerStatus = 0;
 var mixerManual = false;
 var mixerInterlocked = false;
-var mixerFaultCode = 0;
+var mixerFaultCode = 32;
 
 var levelFlashVisible = true;
 var levelFlashTick = 0;
@@ -850,15 +850,13 @@ function bindSwitch(
 function bindNumeric(
     subscription,
     description,
-    updateFunction,
-    errorValue
+    updateFunction
 ) {
     if (
         !subscription ||
         typeof subscription.onResponse !== "function"
     ) {
         console.log(description + " subscription not configured");
-        updateFunction(errorValue);
         draw();
         return;
     }
@@ -866,7 +864,6 @@ function bindNumeric(
     subscription.onResponse(function (error, data) {
         if (error) {
             console.log(description + " error: " + String(error));
-            updateFunction(errorValue);
             draw();
             return;
         }
@@ -909,8 +906,7 @@ bindNumeric(
     "Polymer tank mixer status",
     function (input) {
         mixerStatus = Math.round(safeNumber(input, 0));
-    },
-    0
+    }
 );
 
 bindNumeric(
@@ -918,8 +914,7 @@ bindNumeric(
     "Polymer tank mixer mode",
     function (input) {
         mixerManual = safeNumber(input, 0) !== 0;
-    },
-    0
+    }
 );
 
 bindNumeric(
@@ -927,8 +922,7 @@ bindNumeric(
     "Polymer tank mixer interlock",
     function (input) {
         mixerInterlocked = safeNumber(input, 0) !== 0;
-    },
-    0
+    }
 );
 
 bindNumeric(
@@ -936,8 +930,7 @@ bindNumeric(
     "Polymer tank mixer fault",
     function (input) {
         mixerFaultCode = Math.round(safeNumber(input, 0));
-    },
-    32
+    }
 );
 
 draw();

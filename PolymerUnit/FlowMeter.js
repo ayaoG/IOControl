@@ -36,7 +36,7 @@ var colour = {
 };
 
 var flowValue = 0;
-var flowFault = false;
+var flowFault = true;
 var flashVisible = true;
 
 function safeNumber(input, fallback) {
@@ -164,10 +164,10 @@ bindSubscription(
     config.waterFlowFaultSub,
     "Water flow fault",
     function (input) {
-        flowFault = Boolean(input);
+        flowFault = safeNumber(input, 0) !== 0;
     },
     function () {
-        flowFault = true;
+        /* Retain the last valid PLC state during popup transitions. */
     }
 );
 

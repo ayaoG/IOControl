@@ -1,9 +1,16 @@
 /*
 ============================================================
-POLYMER UNIT - HEADER
+POLYMER UNIT - HEADER WITH CELLULAR SIGNAL
 Weintek EasyBuilder Pro JS Object
 
 Object size: 1024 x 35 px
+
+Cellular input:
+    signalSub          raw signal-strength subscription
+    signalRawMinimum   default 0
+    signalRawMaximum   default 65535
+
+The raw signal is scaled to 0...100%.
 ============================================================
 */
 
@@ -51,23 +58,7 @@ function padTwo(value) {
     return value < 10 ? "0" + value : String(value);
 }
 
-function updateClock() {
-    var now = new Date();
-
-    dateText =
-        padTwo(now.getDate()) + "/" +
-        padTwo(now.getMonth() + 1) + "/" +
-        now.getFullYear();
-
-    timeText =
-        padTwo(now.getHours()) + ":" +
-        padTwo(now.getMinutes()) + ":" +
-        padTwo(now.getSeconds());
-
-    draw();
-}
-
-function scaleSignal(input) {
+function scaleSignal(rawValue) {
     var span = signalRawMaximum - signalRawMinimum;
 
     if (!isFinite(span) || span <= 0) {
@@ -75,7 +66,7 @@ function scaleSignal(input) {
     }
 
     return clamp(
-        (input - signalRawMinimum) * 100 / span,
+        (rawValue - signalRawMinimum) * 100 / span,
         0,
         100
     );
@@ -94,10 +85,29 @@ function getSignalColour() {
     return colour.signalGood;
 }
 
+function updateClock() {
+    var now = new Date();
+
+    dateText =
+        padTwo(now.getDate()) + "/" +
+        padTwo(now.getMonth() + 1) + "/" +
+        now.getFullYear();
+
+    timeText =
+        padTwo(now.getHours()) + ":" +
+        padTwo(now.getMinutes()) + ":" +
+        padTwo(now.getSeconds());
+
+    draw();
+}
+
 function drawHeader(ctx) {
     ctx.fillStyle = colour.background;
     ctx.fillRect(0, 0, DESIGN_WIDTH, DESIGN_HEIGHT);
 
+    /*
+    Project indicator, title, and site name.
+    */
     ctx.fillStyle = colour.accentSoft;
     ctx.beginPath();
     ctx.arc(20, 17.5, 11, 0, Math.PI * 2);
@@ -122,76 +132,80 @@ function drawHeader(ctx) {
 
     /*
     ========================================================
-    CELLULAR SIGNAL BARS - DRAWN DIRECTLY IN THE HEADER
+    CELLULAR SIGNAL ICON - FIVE BARS IN THE HEADER
     ========================================================
     */
     var noSignal = signalKnown && signalPercent <= 0;
-    var activeBars =
-        !signalKnown
-            ? 0
-            : noSignal
-                ? 1
-                : Math.min(5, Math.ceil(signalPercent / 20));
-    var activeColour = getSignalColour();
-    var signalBarIndex;
+    var activeBars;
 
-    for (signalBarIndex = 0; signalBarIndex < 5; signalBarIndex++) {
-        var signalBarHeight = 4 + signalBarIndex * 3;
-        var signalBarX = 790 + signalBarIndex * 7;
-        var signalBarY = 25 - signalBarHeight;
-        var signalBarActive = signalBarIndex < activeBars;
+    if (!signalKnown) {
+        activeBars = 0;
+    } else if (noSignal) {
+        activeBars = 1;
+    } else {
+        activeBars = Math.min(
+            5,
+            Math.ceil(signalPercent / 20)
+        );
+    }
+
+    var activeSignalColour = getSignalColour();
+    var barIndex;
+
+    for (barIndex = 0; barIndex < 5; barIndex++) {
+        var barHeight = 4 + barIndex * 3;
+        var barX = 930 + barIndex * 7;
+        var barY = 25 - barHeight;
+        var barActive = barIndex < activeBars;
 
         ctx.fillStyle =
-            signalBarActive
-                ? activeColour
+            barActive
+                ? activeSignalColour
                 : colour.signalInactiveSoft;
-        ctx.fillRect(
-            signalBarX,
-            signalBarY,
-            4,
-            signalBarHeight
-        );
+        ctx.fillRect(barX, barY, 4, barHeight);
 
         ctx.strokeStyle =
-            signalBarActive
-                ? activeColour
+            barActive
+                ? activeSignalColour
                 : colour.signalInactive;
-        ctx.lineWidth = 0.8;
-        ctx.strokeRect(
-            signalBarX + 0.4,
-            signalBarY + 0.4,
-            3.2,
-            signalBarHeight - 0.8
-        );
+        ctx.lineWidth = 1;
+        ctx.strokeRect(barX, barY, 4, barHeight);
     }
 
     ctx.fillStyle =
         noSignal ? colour.signalLow : colour.secondary;
     ctx.font = "bold 10px Arial";
-    ctx.textAlign = "right";
+    ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillText(
-        signalKnown
-            ? noSignal
-                ? "NO SIG"
-                : String(Math.round(signalPercent)) + "%"
-            : "---",
-        846,
-        17.5
-    );
+
+    if (!signalKnown) {
+        ctx.fillText("---", 976, 17.5);
+    } else if (noSignal) {
+        ctx.fillText("NO SIG", 976, 17.5);
+    } else {
+        ctx.fillText(
+            String(Math.round(signalPercent)) + "%",
+            976,
+            17.5
+        );
+    }
 
     ctx.strokeStyle = colour.line;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(860.5, 8);
-    ctx.lineTo(860.5, 27);
+    ctx.moveTo(914.5, 8);
+    ctx.lineTo(914.5, 27);
     ctx.stroke();
 
+    /*
+    Date and clock.
+    */
+    ctx.fillStyle = colour.secondary;
     ctx.textAlign = "right";
     ctx.font = "11px Arial";
     ctx.fillText(
         dateText + "   " + timeText,
-        DESIGN_WIDTH - 16,
+        898,
         17.5
     );
 
@@ -222,8 +236,6 @@ function draw() {
     canvas.restore();
 }
 
-updateClock();
-
 if (
     config.signalSub &&
     typeof config.signalSub.onResponse === "function"
@@ -249,4 +261,5 @@ if (
     });
 }
 
+updateClock();
 setInterval(updateClock, 1000);

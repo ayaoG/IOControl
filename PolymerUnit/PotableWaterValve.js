@@ -412,22 +412,19 @@ function draw() {
 function bindSubscription(
     subscription,
     description,
-    updateFunction,
-    errorValue
+    updateFunction
 ) {
     if (
         !subscription ||
         typeof subscription.onResponse !== "function"
     ) {
         console.log(description + " subscription not configured");
-        updateFunction(errorValue);
         return;
     }
 
     subscription.onResponse(function (error, data) {
         if (error) {
             console.log(description + " error: " + String(error));
-            updateFunction(errorValue);
             draw();
             return;
         }
@@ -448,8 +445,7 @@ bindSubscription(
     "Potable water valve status",
     function (input) {
         valveStatus = Math.round(safeNumber(input, 0));
-    },
-    0
+    }
 );
 
 bindSubscription(
@@ -457,8 +453,7 @@ bindSubscription(
     "Potable water valve mode",
     function (input) {
         valveManual = safeNumber(input, 0) !== 0;
-    },
-    0
+    }
 );
 
 bindSubscription(
@@ -466,8 +461,7 @@ bindSubscription(
     "Potable water valve interlock",
     function (input) {
         valveInterlocked = safeNumber(input, 0) !== 0;
-    },
-    0
+    }
 );
 
 bindSubscription(
@@ -475,8 +469,7 @@ bindSubscription(
     "Potable water valve fault",
     function (input) {
         valveFault = safeNumber(input, 0) !== 0;
-    },
-    1
+    }
 );
 
 draw();

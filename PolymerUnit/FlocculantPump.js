@@ -54,7 +54,7 @@ var pumpStatus = 0;
 var pumpManual = false;
 var pumpInterlocked = false;
 var pumpOutput = 0;
-var pumpFaultCode = 0;
+var pumpFaultCode = 32;
 
 var pumpAngle = 0;
 var flashVisible = true;
@@ -458,22 +458,19 @@ function draw() {
 function bindSubscription(
     subscription,
     description,
-    updateFunction,
-    errorValue
+    updateFunction
 ) {
     if (
         !subscription ||
         typeof subscription.onResponse !== "function"
     ) {
         console.log(description + " subscription not configured");
-        updateFunction(errorValue);
         return;
     }
 
     subscription.onResponse(function (error, data) {
         if (error) {
             console.log(description + " error: " + String(error));
-            updateFunction(errorValue);
             draw();
             return;
         }
@@ -494,8 +491,7 @@ bindSubscription(
     "Flocculant pump status",
     function (input) {
         pumpStatus = Math.round(safeNumber(input, 0));
-    },
-    0
+    }
 );
 
 bindSubscription(
@@ -503,8 +499,7 @@ bindSubscription(
     "Flocculant pump mode",
     function (input) {
         pumpManual = safeNumber(input, 0) !== 0;
-    },
-    0
+    }
 );
 
 bindSubscription(
@@ -512,8 +507,7 @@ bindSubscription(
     "Flocculant pump interlock",
     function (input) {
         pumpInterlocked = safeNumber(input, 0) !== 0;
-    },
-    0
+    }
 );
 
 bindSubscription(
@@ -521,8 +515,7 @@ bindSubscription(
     "Flocculant pump VSD output",
     function (input) {
         pumpOutput = safeNumber(input, 0);
-    },
-    0
+    }
 );
 
 bindSubscription(
@@ -530,8 +523,7 @@ bindSubscription(
     "Flocculant pump fault",
     function (input) {
         pumpFaultCode = Math.round(safeNumber(input, 0));
-    },
-    32
+    }
 );
 
 draw();
