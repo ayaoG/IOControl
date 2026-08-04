@@ -31,6 +31,14 @@ light teal header fade into the standard content background colour.
 
 - `projectTitle`: defaults to `POLYMER UNIT`
 - `siteName`: defaults to `PROCESS CONTROL`
+- `signalSub`: raw cellular signal-strength value
+- `signalRawMinimum` and `signalRawMaximum`: defaults to `0…65535`;
+  the header scales this range to `0…100%`
+
+A valid scaled signal of zero shows a red first bar and `NO SIG`.
+Before copying the updated header into EasyBuilder, import
+`HeaderConfig.json` through **Config > Template** and assign
+`signalSub` to the cellular-strength tag.
 
 ### Navigation
 

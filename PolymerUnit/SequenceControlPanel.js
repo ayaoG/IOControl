@@ -162,7 +162,7 @@ function getStatusText() {
         case 6:
             return "DEVICE IN MANUAL";
         case 7:
-            return "MINOR FAULT";
+            return "Warning FAULT";
         case 8:
             return "POWERUP HOLD";
         case 9:

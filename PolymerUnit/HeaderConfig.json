@@ -1,0 +1,7 @@
+{
+    "projectTitle": "POLYMER UNIT",
+    "siteName": "PROCESS CONTROL",
+    "signalRawMinimum": 0,
+    "signalRawMaximum": 65535,
+    "signalSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
+}

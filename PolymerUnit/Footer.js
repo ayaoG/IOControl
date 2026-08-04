@@ -14,8 +14,8 @@ var DESIGN_WIDTH = 1024;
 var DESIGN_HEIGHT = 35;
 
 var config = this.config || {};
-var footerText = config.footerText || "POLYMER PROCESS CONTROL";
-var operatorName = config.operatorName || "OPERATOR";
+var footerText = config.footerText || "";
+var operatorName = config.operatorName || "I/O Control Electrical";
 var revision = config.revision || "REV 1.0";
 
 var colour = {
@@ -50,7 +50,7 @@ function drawFooter(ctx) {
     ctx.font = "10px Arial";
     ctx.textAlign = "right";
     ctx.fillText(
-        "USER: " + operatorName + "   |   " + revision,
+        operatorName + "   |   " + revision,
         DESIGN_WIDTH - 16,
         17.5
     );
