@@ -49,6 +49,7 @@ var valveStatus = 0;
 var valveManual = false;
 var valveInterlocked = false;
 var valveFault = true;
+var valveFaultHasValidValue = false;
 var flashVisible = true;
 
 function safeNumber(input, fallback) {
@@ -90,8 +91,8 @@ function getValveInformation() {
         case 1:
             return {
                 text: "ON",
-                colour: colour.green,
-                soft: colour.greenSoft,
+                colour: colour.blue,
+                soft: colour.blueSoft,
                 flashing: false
             };
 
@@ -412,19 +413,30 @@ function draw() {
 function bindSubscription(
     subscription,
     description,
-    updateFunction
+    updateFunction,
+    errorValue
 ) {
+    function applyErrorValue() {
+        if (typeof errorValue === "function") {
+            errorValue();
+        } else {
+            updateFunction(errorValue);
+        }
+    }
+
     if (
         !subscription ||
         typeof subscription.onResponse !== "function"
     ) {
         console.log(description + " subscription not configured");
+        applyErrorValue();
         return;
     }
 
     subscription.onResponse(function (error, data) {
         if (error) {
             console.log(description + " error: " + String(error));
+            applyErrorValue();
             draw();
             return;
         }
@@ -445,7 +457,8 @@ bindSubscription(
     "Potable water valve status",
     function (input) {
         valveStatus = Math.round(safeNumber(input, 0));
-    }
+    },
+    0
 );
 
 bindSubscription(
@@ -453,7 +466,8 @@ bindSubscription(
     "Potable water valve mode",
     function (input) {
         valveManual = safeNumber(input, 0) !== 0;
-    }
+    },
+    0
 );
 
 bindSubscription(
@@ -461,7 +475,8 @@ bindSubscription(
     "Potable water valve interlock",
     function (input) {
         valveInterlocked = safeNumber(input, 0) !== 0;
-    }
+    },
+    0
 );
 
 bindSubscription(
@@ -469,6 +484,13 @@ bindSubscription(
     "Potable water valve fault",
     function (input) {
         valveFault = safeNumber(input, 0) !== 0;
+        valveFaultHasValidValue = true;
+    },
+    function () {
+        /* Retain a valid PLC state through popup transition errors. */
+        if (!valveFaultHasValidValue) {
+            valveFault = true;
+        }
     }
 );
 
