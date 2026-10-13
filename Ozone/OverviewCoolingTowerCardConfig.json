@@ -1,0 +1,20 @@
+{
+    "frequencyUnit": "Hz",
+    "coolingPressureUnit": "Pa",
+    "temperatureUnit": "\u00B0C",
+    "flowUnit": "L/min",
+    "coolingPumpStatusSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingPumpModeSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingPumpOutputSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingPumpFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingFanStatusSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingFanModeSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingFanOutputSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingFanFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingPressureSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingPressureFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingTemperatureSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingTemperatureFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingFlowSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "coolingFlowFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
+}

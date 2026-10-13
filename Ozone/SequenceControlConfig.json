@@ -1,0 +1,16 @@
+{
+    "panelTitle": "SEQUENCE CONTROL",
+    "stepTimeDivisor": 1,
+    "startCmdWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "stopCmdWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "resetCmdWrite": "Address|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "sequenceRunningSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "sequenceStatusSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "readyResetSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "startCmdSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "stopCmdSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "resetCmdSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "stepNumberSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "stepTimeSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "stepMessageSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
+}
