@@ -37,6 +37,8 @@ var value = {
     fault: 0,
     pressure: 0,
     pressureFault: false,
+    factoryPressure: 0,
+    factoryPressureFault: false,
     ovenStart: false
 };
 
@@ -123,6 +125,9 @@ function drawCard(ctx) {
         ? (flashState ? colour.red : colour.redDark)
         : colour.text;
     var ovenColour = value.ovenStart ? colour.green : colour.grey;
+    var factoryPressureColour = value.factoryPressureFault
+        ? (flashState ? colour.red : colour.redDark)
+        : colour.text;
 
     ctx.fillStyle = colour.panel;
     roundedRect(ctx, 0.5, 0.5, DESIGN_WIDTH - 1, DESIGN_HEIGHT - 1, 9);
@@ -159,30 +164,44 @@ function drawCard(ctx) {
         equipmentColour
     );
 
-    drawDivider(ctx, 245);
-    drawText(ctx, "VSD OUTPUT", 271, 46, "8px Arial", colour.muted);
+    drawDivider(ctx, 200);
+    drawText(ctx, "VSD OUTPUT", 216, 46, "8px Arial", colour.muted);
     drawText(
         ctx,
         numberValue(value.output, 0).toFixed(1) + " " +
             (config.frequencyUnit || "Hz"),
-        271,
+        216,
         66,
         "bold 15px Arial",
         colour.text
     );
 
-    drawDivider(ctx, 445);
-    drawText(ctx, "STACK PRESSURE", 471, 46, "8px Arial", colour.muted);
+    drawDivider(ctx, 330);
+    drawText(ctx, "STACK PRESSURE", 346, 46, "8px Arial", colour.muted);
     drawText(
         ctx,
         value.pressureFault
             ? "FAULT"
             : numberValue(value.pressure, 0).toFixed(1) + " " +
                 (config.pressureUnit || "Pa"),
-        471,
+        346,
         66,
         "bold 15px Arial",
         pressureColour
+    );
+
+    drawDivider(ctx, 490);
+    drawText(ctx, "FACTORY PRESSURE", 506, 46, "8px Arial", colour.muted);
+    drawText(
+        ctx,
+        value.factoryPressureFault
+            ? "FAULT"
+            : numberValue(value.factoryPressure, 0).toFixed(1) + " " +
+                (config.pressureUnit || "Pa"),
+        506,
+        66,
+        "bold 15px Arial",
+        factoryPressureColour
     );
 
     drawDivider(ctx, 650);
@@ -242,6 +261,12 @@ bind(config.stackPressureSub, "Stack pressure", function (input) {
 }, 0);
 bind(config.stackPressureFaultSub, "Stack pressure fault", function (input) {
     value.pressureFault = numberValue(input, 0) !== 0;
+}, true);
+bind(config.factoryPressureSub, "Factory pressure", function (input) {
+    value.factoryPressure = numberValue(input, 0);
+}, 0);
+bind(config.factoryPressureFaultSub, "Factory pressure fault", function (input) {
+    value.factoryPressureFault = numberValue(input, 0) !== 0;
 }, true);
 bind(config.ovenStartSub, "Oven start signal", function (input) {
     value.ovenStart = numberValue(input, 0) !== 0;

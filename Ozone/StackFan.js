@@ -5,7 +5,7 @@ SMOOTH STABLE EASYBUILDER VERSION
 ============================================================
 
 Recommended JS Object size:
-    320 x 210
+    440 x 210
 
 Required subscriptions:
 
@@ -19,11 +19,21 @@ Required subscriptions:
     pidSVSub
     pidCVSub
 
+Additional subscriptions (configure for the new readings):
+
+    outletPressureSub
+    outletPressureFaultSub
+    factoryPressureSub
+    factoryPressureFaultSub
+
 Optional strings:
 
     equipmentName
     pressureName
     pressureUnit
+    outletPressureName
+    factoryPressureName
+    factoryPressureUnit
     vsdOutputUnit
 
     pidPVName
@@ -74,7 +84,7 @@ const canvas = new Canvas();
 
 this.widget.add(canvas);
 
-const DESIGN_WIDTH = 320;
+const DESIGN_WIDTH = 440;
 const DESIGN_HEIGHT = 210;
 
 
@@ -99,6 +109,13 @@ const pressureUnit =
 const vsdOutputUnit =
     this.config.vsdOutputUnit ||
     "%";
+
+const outletPressureName =
+    this.config.outletPressureName || "OUTLET PRESSURE";
+const factoryPressureName =
+    this.config.factoryPressureName || "FACTORY PRESSURE";
+const factoryPressureUnit =
+    this.config.factoryPressureUnit || pressureUnit;
 
 const pidPVName =
     this.config.pidPVName ||
@@ -165,6 +182,11 @@ let vsdOutputValue = 0.0;
 
 let pressureValue = 0.0;
 let pressureFaultCode = 0;
+
+let outletPressureValue = 0.0;
+let outletPressureFaultCode = 0;
+let factoryPressureValue = 0.0;
+let factoryPressureFaultCode = 0;
 
 let pidPVValue = 0.0;
 let pidSVValue = 0.0;
@@ -782,8 +804,15 @@ PRESSURE TRANSMITTER
 function drawPressureTransmitter(
     ctx,
     centreX,
-    ductY
+    ductY,
+    reading
 ) {
+    reading = reading || {
+        name: pressureName,
+        value: getPressureValue(),
+        fault: pressureFaultCode
+    };
+    const pressureFault = reading.fault !== 0;
     const transmitterY =
         ductY - 49;
 
@@ -791,7 +820,7 @@ function drawPressureTransmitter(
         COLOUR_NEUTRAL;
 
     if (
-        hasPressureFault()
+        pressureFault
     ) {
         if (
             flashVisible
@@ -803,7 +832,7 @@ function drawPressureTransmitter(
     }
 
     if (
-        hasPressureFault()
+        pressureFault
     ) {
         ctx.strokeStyle = colour;
     } else {
@@ -874,20 +903,20 @@ function drawPressureTransmitter(
     ctx.font = "bold 9px Arial";
 
     ctx.fillText(
-        pressureName,
+        reading.name,
         centreX,
         transmitterY - 25
     );
 
     ctx.fillStyle =
-        hasPressureFault()
+        pressureFault
             ? colour
             : COLOUR_TEXT;
 
     ctx.font = "bold 15px Arial";
 
     ctx.fillText(
-        getPressureValue()
+        safeNumber(reading.value, 0.0)
             .toFixed(1) +
         " " +
         pressureUnit,
@@ -896,14 +925,14 @@ function drawPressureTransmitter(
     );
 
     if (
-        hasPressureFault()
+        pressureFault
     ) {
         ctx.fillStyle = colour;
         ctx.font = "bold 10px Arial";
 
         ctx.fillText(
             getPressureFaultText(
-                pressureFaultCode
+                reading.fault
             ),
             centreX,
             ductY + 49
@@ -1512,11 +1541,43 @@ MAIN DRAWING
 ============================================================
 */
 
+function drawFactoryPressure(ctx, centreX, topY) {
+    const fault = factoryPressureFaultCode !== 0;
+    const colour = fault
+        ? (flashVisible ? COLOUR_RED : COLOUR_RED_DARK)
+        : COLOUR_TEXT;
+
+    ctx.fillStyle = "rgba(25,32,38,0.95)";
+    ctx.strokeStyle = fault ? colour : COLOUR_BORDER;
+    ctx.lineWidth = 1;
+    roundedRect(ctx, centreX - 63, topY, 126, 57, 7);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = COLOUR_TEXT_DARK;
+    ctx.font = "bold 9px Arial";
+    ctx.fillText(factoryPressureName, centreX, topY + 10);
+    ctx.fillStyle = colour;
+    ctx.font = "bold 21px Arial";
+    ctx.fillText(
+        safeNumber(factoryPressureValue, 0.0).toFixed(1) + " " + factoryPressureUnit,
+        centreX,
+        topY + 31
+    );
+    if (fault) {
+        ctx.font = "bold 9px Arial";
+        ctx.fillText(getPressureFaultText(factoryPressureFaultCode), centreX, topY + 49);
+    }
+}
+
 function drawContent() {
     const ductY = 88;
 
     const pressureX = 70;
     const fanX = 220;
+    const outletPressureX = 360;
 
     const statusInfo =
         getVsdStatusInfo(
@@ -1563,7 +1624,7 @@ function drawContent() {
     drawDuctSection(
         canvas,
         fanX + 57,
-        DESIGN_WIDTH - 18,
+        418,
         ductY
     );
 
@@ -1599,6 +1660,13 @@ function drawContent() {
         ductY,
         statusColour
     );
+
+    drawPressureTransmitter(canvas, outletPressureX, ductY, {
+        name: outletPressureName,
+        value: outletPressureValue,
+        fault: outletPressureFaultCode
+    });
+    drawAirflowArrow(canvas, 403, ductY, statusColour);
 
     canvas.fillStyle =
         statusColour;
@@ -1642,6 +1710,7 @@ function drawContent() {
         147,
         statusInfo
     );
+    drawFactoryPressure(canvas, 370, 147);
 }
 
 
@@ -1839,7 +1908,9 @@ setInterval(
             if (
                 statusInfo.flash ||
                 hasVsdFault() ||
-                hasPressureFault()
+                hasPressureFault() ||
+                outletPressureFaultCode !== 0 ||
+                factoryPressureFaultCode !== 0
             ) {
                 flashVisible =
                     !flashVisible;
@@ -2081,6 +2152,35 @@ this.config.pressureFaultSub.onResponse(
     }
 );
 
+
+function bindAdditionalPressure(subscription, description, update, fallback) {
+    if (!subscription || typeof subscription.onResponse !== "function") {
+        console.log(description + " subscription not configured");
+        return;
+    }
+    subscription.onResponse(function (error, data) {
+        if (error) {
+            console.log(description + " error: " + String(error.message || error));
+            update(fallback);
+        } else if (data && data.values && data.values.length > 0) {
+            update(data.values[0]);
+        }
+        drawAssembly();
+    });
+}
+
+bindAdditionalPressure(this.config.outletPressureSub, "Outlet pressure", function (input) {
+    outletPressureValue = safeNumber(input, 0.0);
+}, 0.0);
+bindAdditionalPressure(this.config.outletPressureFaultSub, "Outlet pressure fault", function (input) {
+    outletPressureFaultCode = Math.round(safeNumber(input, 0));
+}, 32);
+bindAdditionalPressure(this.config.factoryPressureSub, "Factory pressure", function (input) {
+    factoryPressureValue = safeNumber(input, 0.0);
+}, 0.0);
+bindAdditionalPressure(this.config.factoryPressureFaultSub, "Factory pressure fault", function (input) {
+    factoryPressureFaultCode = Math.round(safeNumber(input, 0));
+}, 32);
 
 this.config.pidPVSub.onResponse(
     function (

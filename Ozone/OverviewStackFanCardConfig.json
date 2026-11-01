@@ -7,5 +7,7 @@
     "stackFanFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "stackPressureSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "stackPressureFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "factoryPressureSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
+    "factoryPressureFaultSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA=",
     "ovenStartSub": "Subscription|AAABCQBMb2NhbCBITUkIAQAwAAAAAAACAQA="
 }

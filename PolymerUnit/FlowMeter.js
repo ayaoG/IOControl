@@ -59,11 +59,9 @@ function drawFlowMeter(ctx) {
     ctx.fillText(meterName, centreX, 22);
 
     ctx.fillStyle = flowFault ? displayColour : colour.text;
-    ctx.font = flowFault ? "bold 10px Arial" : "bold 15px Arial";
+    ctx.font = "bold 15px Arial";
     ctx.fillText(
-        flowFault
-            ? "FAULT"
-            : flowValue.toFixed(flowDecimals) + " " + flowUnit,
+        flowValue.toFixed(flowDecimals) + " " + flowUnit,
         centreX,
         40
     );

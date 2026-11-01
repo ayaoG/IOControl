@@ -12,6 +12,12 @@ the sequence-control panel is omitted from the Overview page.
 Place all three above `ContentBackground.js`. Their positions leave room for
 the background object's 32 px current-page title band.
 
+The Stack Fan card shows fan status, VSD output, stack pressure, factory
+pressure, and the oven start signal. Map `factoryPressureSub` and
+`factoryPressureFaultSub` to the factory pressure value and fault flag in
+EasyBuilder Pro. Both pressures use `pressureUnit` (default `Pa`) and one
+decimal place; an active pressure fault displays a flashing `FAULT`.
+
 The Ozone Generators card keeps all five units in one object so they can be
 compared side-by-side. Each unit has independent status, fault, output-percent,
 output-current, and output-flow subscriptions. Output, current, and flow units
